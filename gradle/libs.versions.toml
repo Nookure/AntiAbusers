@@ -1,0 +1,8 @@
+[versions]
+nook-core = "1.0.0-SNAPSHOT"
+paper = "1.20.1-R0.1-SNAPSHOT"
+
+[libraries]
+nookcore = { group = "es.angelillo15.core", name = "nookcore-core", version.ref = "nook-core" }
+nookcoreLoader = { group = "es.angelillo15.core", name = "nookcore-bootstrap", version.ref = "nook-core" }
+paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
