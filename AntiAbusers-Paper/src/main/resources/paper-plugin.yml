@@ -4,3 +4,4 @@ api-version: "1.19"
 author: Angelillo15
 loader: es.angelillo15.antiabusers.DependencyLoader
 main: es.angelillo15.antiabusers.AntiAbusersLoader
+depend: [WorldGuard]
