@@ -20,6 +20,7 @@ allprojects {
         mavenCentral()
         maven("https://repo.nookure.com/releases")
         maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://maven.enginehub.org/repo/")
     }
 
     tasks.withType<JavaCompile> {
