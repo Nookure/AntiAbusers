@@ -27,10 +27,16 @@ open class EntryHandler protected constructor(session: Session?) : Handler(sessi
     exited: Set<ProtectedRegion>,
     moveType: MoveType
   ): Boolean {
+    if (entered.isEmpty() && exited.isEmpty()) {
+      return true
+    }
+
     val manager = AntiAbusers.instance.pluginInjector.getInstance(AntiAbusersPlayers::class.java)
     val abuserPlayer: AntiAbuserPlayer = manager.getPlayer(player.name)!!
 
     abuserPlayer.reloadRegionList(exited, entered)
+    AntiAbusers.instance.pPluginLogger
+      .debug("Player ${player.name} has exited ${exited.size} regions and entered ${entered.size} regions")
     return true
   }
 
