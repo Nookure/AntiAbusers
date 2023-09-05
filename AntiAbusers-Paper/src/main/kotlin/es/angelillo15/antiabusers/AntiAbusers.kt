@@ -30,7 +30,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
       private set
   }
 
-  override fun onLoad() {
+  override fun onEnable() {
     instance = this
     pluginInjector = Guice.createInjector(PluginModule())
     pPluginLogger = pluginInjector.getInstance(PluginLogger::class.java)
@@ -79,7 +79,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     server.pluginManager.registerEvents(listener, this)
   }
 
-  private fun unregisterListener() {
+  fun unregisterListener() {
     HandlerList.getHandlerLists().forEach {
       listeners.forEach(it::unregister)
     }
