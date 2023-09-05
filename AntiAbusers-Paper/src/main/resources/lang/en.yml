@@ -14,19 +14,51 @@
 General:
   # Prefix of the plugin.
   # You can access to the prefix with {prefix} in the messages.
-  prefix: "<light_purple>AntiAbusers</light_purple> <gray>|</gray>"
+  prefix: '<light_purple>AntiAbusers</light_purple> <gray>|</gray>'
   # Message when you don't have permission to do an action.
-  noPermission: "&cYou don't have permission to do that."
+  noPermission: '&cYou dont have permission to do that.'
   # Message when you reload the plugin.
-  reloaded: "{prefix} &7The plugin has been reloaded."
+  reloaded: '{prefix} &7The plugin has been reloaded.'
   # Message when you execute edit command
   # and there isn't any region in the world.
-  noRegionsFound: "{prefix} &cNo regions found."
+  noRegionsFound: '{prefix} &cNo regions found.'
 # Gui messages section.
 Gui:
   backItem:
-    name: "&cBack"
-    material: "RED_STAINED_GLASS_PANE"
+    name: '&cBack'
+    material: 'RED_STAINED_GLASS_PANE'
   forwardItem:
-    name: "&aForward"
-    material: "LIME_STAINED_GLASS_PANE"
+    name: '&aForward'
+    material: 'LIME_STAINED_GLASS_PANE'
+  selectRegionTitle: '&aSelect a region'
+  settingsRegion:
+    title: '&aEditing {region}'
+    edit:
+      name: '&aEdit'
+      material: 'BOOK'
+    addItems:
+      name: '&aAdd items'
+      material: 'CHEST'
+    back:
+      name: '&cBack'
+      material: 'RED_STAINED_GLASS_PANE'
+  addItemsToRegion:
+    title: '&aAdd items to region'
+    confirm:
+      name: '&aConfirm'
+      material: 'LIME_STAINED_GLASS_PANE'
+    cancel:
+      name: '&cCancel'
+      material: 'RED_STAINED_GLASS_PANE'
+    add:
+      name: '<light_purple>Add</light_purple>'
+      material: 'PURPLE_STAINED_GLASS_PANE'
+  editItems:
+    title: '&aEdit items for {region}'
+    titleDeletedMenu: 'Delete item for {region}'
+    confirm:
+      name: '&aConfirm'
+      material: 'LIME_STAINED_GLASS_PANE'
+    cancel:
+      name: '&cCancel'
+      material: 'RED_STAINED_GLASS_PANE'
