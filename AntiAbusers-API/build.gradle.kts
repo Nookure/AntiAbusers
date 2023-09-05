@@ -3,6 +3,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(libs.nookcore)
     compileOnly(libs.paper)
+    compileOnly(libs.worldguard)
 }
 
 tasks.test {
