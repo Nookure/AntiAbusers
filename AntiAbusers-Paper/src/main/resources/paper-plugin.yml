@@ -11,3 +11,6 @@ dependencies:
       load: BEFORE
       required: true
       join-classpath: true
+load-before:
+  - name: WorldGuard
+    bootstrap: false
