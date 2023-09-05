@@ -3,13 +3,18 @@ package es.angelillo15.antiabusers
 import com.google.inject.Guice
 import com.google.inject.Injector
 import com.sk89q.worldguard.WorldGuard
+import es.angelillo15.antiabusers.command.AntiAbuserParent
+import es.angelillo15.antiabusers.command.CommandManager
 import es.angelillo15.antiabusers.config.ConfigManager
 import es.angelillo15.antiabusers.handler.EntryHandler
 import es.angelillo15.antiabusers.inject.PlayerModule
 import es.angelillo15.antiabusers.inject.PluginModule
 import es.angelillo15.antiabusers.listener.OnJoinLeave
 import es.angelillo15.antiabusers.utils.PluginLogger
+import es.angelillo15.antiabusers.utils.StaticMembersInjector
 import es.angelillo15.core.Logger
+import es.angelillo15.core.utils.TextUtils
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
@@ -34,6 +39,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     instance = this
     pluginInjector = Guice.createInjector(PluginModule())
     pPluginLogger = pluginInjector.getInstance(PluginLogger::class.java)
+    StaticMembersInjector.injectStatics(pluginInjector, TextUtils::class.java)
   }
 
   override fun getDebug(): Boolean {
@@ -92,6 +98,16 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     pPluginLogger.debug("Reloading plugin...")
     pPluginLogger.debug("Unregistering listeners...")
     unregisterListener()
+    pPluginLogger.debug("Unregistering commands...")
+    unregisterCommands()
+    pPluginLogger.debug("Loading config...")
+    loadConfig()
+    pPluginLogger.debug("Registering commands...")
+    registerCommands()
+    pPluginLogger.debug("Loading listeners...")
+    loadListeners()
+    val end = System.currentTimeMillis()
+    pPluginLogger.debug("Plugin reloaded in ${end - start}ms")
   }
 
   override fun getPluginLogger(): Logger {
@@ -100,5 +116,13 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
 
   override fun loadConfig() {
     pluginInjector.getInstance(ConfigManager::class.java).load()
+  }
+
+  override fun registerCommands() {
+    CommandManager.registerCommand(pluginInjector.getInstance(AntiAbuserParent::class.java))
+  }
+
+  override fun unregisterCommands() {
+    Bukkit.getServer().commandMap.getCommand("antiabusers")?.unregister(Bukkit.getServer().commandMap)
   }
 }
