@@ -8,9 +8,10 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class PaperAntiAbuserPlayer @Inject constructor(private val player: Player) : AntiAbuserPlayer {
-  @Inject
-  private lateinit var regionContainer: RegionContainer
+class PaperAntiAbuserPlayer @Inject constructor(
+  private val player: Player,
+  private val regionContainer: RegionContainer
+) : AntiAbuserPlayer {
 
   private var abuser = false
   private var checking = false
