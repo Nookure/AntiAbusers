@@ -9,14 +9,14 @@ import es.angelillo15.core.config.Config
 @Singleton
 @Suppress("ConvertSecondaryConstructorToPrimary")
 class ConfigManager : Config {
-  lateinit var config: es.angelillo15.core.libs.config.manager.ConfigManager
+  var config: es.angelillo15.core.libs.config.manager.ConfigManager? = null
     private set
-  lateinit var messages: es.angelillo15.core.libs.config.manager.ConfigManager
+  var messages: es.angelillo15.core.libs.config.manager.ConfigManager? = null
     private set
   private val logger: Logger
 
   companion object {
-    lateinit var configManager: ConfigManager
+    var configManager: ConfigManager? = null
       private set
   }
 
@@ -34,7 +34,7 @@ class ConfigManager : Config {
 
   private fun loadConfig() {
     config = loadFile("config.yml", "config.yml")
-    plugin.setDebug(config.config.getBoolean("Config.debug"))
+    plugin.setDebug(config!!.config.getBoolean("Config.debug"))
     logger.debug("Config file loaded!")
   }
 
@@ -43,7 +43,7 @@ class ConfigManager : Config {
     loadFile("lang/en.yml", "lang/en.yml")
     loadFile("lang/es.yml", "lang/es.yml")
 
-    val lang = config.config.getString("Config.language")
+    val lang = config!!.config.getString("Config.language")
     logger.debug("Loading $lang.yml file...")
 
     messages = loadFile("lang/$lang.yml", "lang/$lang.yml")
