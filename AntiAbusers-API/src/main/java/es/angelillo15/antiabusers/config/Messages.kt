@@ -8,15 +8,6 @@ import net.kyori.adventure.text.Component
 
 @Singleton
 class Messages @Inject constructor(var configManager: ConfigManager) : CoreMessages() {
-  companion object {
-    var instance: Messages? = null
-      private set
-  }
-
-  init {
-    instance = this
-  }
-
   fun prefix(): String {
     return getMessage("General.prefix")
   }
@@ -33,11 +24,23 @@ class Messages @Inject constructor(var configManager: ConfigManager) : CoreMessa
     return getMessage(path).replace("{prefix}", prefix())
   }
 
-  fun getMessage(path: String): String {
-    return TextUtils.toMM(configManager.messages.config.getString(path))
+  private fun formatMessages(path: String): List<String> {
+    return configManager.messages!!.config.getStringList(path).stream().map { s: String ->
+      TextUtils.simpleColorize(s)
+    }.toList()
   }
-}
 
-fun tl(path: String): String {
-  return Messages.instance!!.getMessage(path)
+  private fun getMessage(path: String): String {
+    return TextUtils.toMM(configManager.messages!!.config.getString(path))
+  }
+
+  private fun formatComponent(path: String): Component {
+    return TextUtils.toComponent(configManager.messages!!.config.getString(path))
+  }
+
+  fun formatComponents(path: String): List<Component> {
+    return configManager.messages!!.config.getStringList(path).stream().map { s: String ->
+      TextUtils.toComponent(s)
+    }.toList()
+  }
 }
