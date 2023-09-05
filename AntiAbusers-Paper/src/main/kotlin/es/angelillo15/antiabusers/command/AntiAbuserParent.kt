@@ -2,6 +2,7 @@ package es.angelillo15.antiabusers.command
 
 import com.google.inject.Inject
 import es.angelillo15.antiabusers.AntiAbusers
+import es.angelillo15.antiabusers.command.subcommand.EditCMD
 import es.angelillo15.antiabusers.command.subcommand.ReloadCMD
 import es.angelillo15.core.cmd.CommandData
 import es.angelillo15.core.cmd.CommandParent
@@ -18,6 +19,7 @@ class AntiAbuserParent : CommandParent() {
   override fun registerSubCommands() {
     registerHelpSubCommand("/antiabusers")
     registerSubCommand(antiAbusers.pluginInjector.getInstance(ReloadCMD::class.java))
+    registerSubCommand(antiAbusers.pluginInjector.getInstance(EditCMD::class.java))
   }
 
   override fun sendHelp(sender: CommandSender) {
