@@ -26,7 +26,7 @@ public class DependencyLoader implements PluginLoader {
                 "https://jitpack.io"
         ).build();
 
-        Dependency core = new Dependency(new DefaultArtifact("es.angelillo15.core:nookcore-core:1.0.3"), null);
+        Dependency core = new Dependency(new DefaultArtifact("es.angelillo15.core:nookcore-core:1.0.4"), null);
 
         resolver.addRepository(nookure);
         resolver.addRepository(jitpack);
