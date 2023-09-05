@@ -19,3 +19,14 @@ General:
   noPermission: "&cYou don't have permission to do that."
   # Message when you reload the plugin.
   reloaded: "{prefix} &7The plugin has been reloaded."
+  # Message when you execute edit command
+  # and there isn't any region in the world.
+  noRegionsFound: "{prefix} &cNo regions found."
+# Gui messages section.
+Gui:
+  backItem:
+    name: "&cBack"
+    material: "RED_STAINED_GLASS_PANE"
+  forwardItem:
+    name: "&aForward"
+    material: "LIME_STAINED_GLASS_PANE"
