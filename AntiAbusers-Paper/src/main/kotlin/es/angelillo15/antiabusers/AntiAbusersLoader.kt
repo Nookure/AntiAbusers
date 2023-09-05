@@ -1,5 +1,7 @@
 package es.angelillo15.antiabusers
 
+import es.angelillo15.core.libs.obliviate.inventory.InventoryAPI
+
 class AntiAbusersLoader : AntiAbusers() {
   override fun onEnable() {
     super.onEnable()
@@ -8,6 +10,8 @@ class AntiAbusersLoader : AntiAbusers() {
     loadHandlers()
     loadListeners()
     registerCommands()
+    loadRegions()
+    InventoryAPI(this).init()
   }
 
   override fun onDisable() {
