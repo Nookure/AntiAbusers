@@ -11,3 +11,11 @@
 # If you have any questions, please contact me on Discord:
 #   Discord: https://discord.nookure.com
 #
+General:
+  # Prefix of the plugin.
+  # You can access to the prefix with {prefix} in the messages.
+  prefix: "<light_purple>AntiAbusers</light_purple> <gray>|</gray>"
+  # Message when you don't have permission to do an action.
+  noPermission: "&cYou don't have permission to do that."
+  # Message when you reload the plugin.
+  reloaded: "{prefix} &7The plugin has been reloaded."
