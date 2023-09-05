@@ -29,11 +29,14 @@ class OnJoinLeave : Listener {
       return
     }
 
+    logger.debug("Created player ${player.getName()}")
     manager.addPlayer(player)
   }
 
   @EventHandler
   fun onLeave(event: PlayerQuitEvent) {
     manager.removePlayer(event.player.name)
+
+    logger.debug("Removed player ${event.player.name}")
   }
 }
