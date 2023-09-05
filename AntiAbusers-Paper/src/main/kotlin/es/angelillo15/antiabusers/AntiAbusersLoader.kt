@@ -7,10 +7,12 @@ class AntiAbusersLoader : AntiAbusers() {
     loadConfig()
     loadHandlers()
     loadListeners()
+    registerCommands()
   }
 
   override fun onDisable() {
     pPluginLogger.info("Disabling AntiAbusers...")
     unregisterListener()
+    unregisterCommands()
   }
 }
