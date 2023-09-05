@@ -6,14 +6,11 @@ import org.bukkit.entity.Player
 
 interface AntiAbusersInstance : NookInstance {
   fun createPlayer(player: Player?): AntiAbuserPlayer?
-
   fun loadHandlers()
-
   fun loadListeners()
-
   fun reload()
-
   fun getPluginLogger() : Logger
-
   fun loadConfig()
+  fun registerCommands()
+  fun unregisterCommands()
 }
