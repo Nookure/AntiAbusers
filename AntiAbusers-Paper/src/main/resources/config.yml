@@ -11,3 +11,13 @@
 # If you have any questions, please contact me on Discord:
 #   Discord: https://discord.nookure.com
 #
+Config:
+  # The language files to use
+  # These are the available languages:
+  #   - en (English)
+  #   - es (Spanish)
+  language: en
+  # Enable or disable the debug mode (true/false)
+  # When enabled, the plugin will print debug messages to the console
+  # This is useful for debugging the plugin and finding errors
+  debug: false
