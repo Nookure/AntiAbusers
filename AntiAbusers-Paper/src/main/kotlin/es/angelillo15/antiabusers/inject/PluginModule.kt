@@ -8,6 +8,7 @@ import es.angelillo15.antiabusers.AntiAbusersInstance
 import es.angelillo15.antiabusers.config.ConfigManager
 import es.angelillo15.antiabusers.utils.PluginLogger
 import es.angelillo15.core.Logger
+import es.angelillo15.core.NookInstance
 
 open class PluginModule : AbstractModule() {
   override fun configure() {
@@ -17,5 +18,6 @@ open class PluginModule : AbstractModule() {
     bind(AntiAbusersInstance::class.java).toInstance(AntiAbusers.instance)
     bind(AntiAbusers::class.java).toInstance(AntiAbusers.instance)
     bind(ConfigManager::class.java).asEagerSingleton()
+    bind(NookInstance::class.java).toInstance(AntiAbusers.instance)
   }
 }
