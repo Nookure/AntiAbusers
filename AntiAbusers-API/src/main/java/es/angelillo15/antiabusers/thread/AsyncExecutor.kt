@@ -1,19 +1,26 @@
 package es.angelillo15.antiabusers.thread
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import es.angelillo15.core.Logger
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
 
-object AsyncExecutor {
-  @Inject
-  private lateinit var logger: Logger
+private const val TPS = 5
+private const val MILES = 1000 / TPS
+
+@Singleton
+@Suppress("UNCHECKED_CAST")
+class AsyncExecutor @Inject constructor(private val logger: Logger) {
+  companion object {
+    @JvmStatic
+    lateinit var instance: AsyncExecutor
+      private set
+  }
 
   private var threadPoolExecutor = Executors.newFixedThreadPool(5)
   private var actions = ArrayList<Action>()
   private var shuttingDown = false
-  private const val tps = 5
-  private const val miles = 1000 / tps
 
   fun start() {
     Thread({
@@ -32,7 +39,7 @@ object AsyncExecutor {
 
         for (action in actionsClone) {
           if (action.delayTask > 0) {
-            action.delayTask -= miles
+            action.delayTask -= MILES
             continue
           } else {
             action.delayTask = action.delay
@@ -163,6 +170,10 @@ object AsyncExecutor {
   fun execute(runnable: () -> Unit): Int {
     return execute(runnable, 0, false)
   }
+
+  init {
+    instance = this
+  }
 }
 
 /**
@@ -170,7 +181,7 @@ object AsyncExecutor {
  * @param runnable The runnable to execute
  */
 fun executeAsync(runnable: Runnable) {
-  AsyncExecutor.execute(runnable)
+  AsyncExecutor.instance.execute(runnable)
 }
 
 /**
@@ -178,7 +189,7 @@ fun executeAsync(runnable: Runnable) {
  * @param runnable The runnable to execute
  */
 fun executeAsync(runnable: () -> Unit) {
-  AsyncExecutor.execute(runnable)
+  AsyncExecutor.instance.execute(runnable)
 }
 
 /**
@@ -187,7 +198,7 @@ fun executeAsync(runnable: () -> Unit) {
  * @param delay The delay in milliseconds
  */
 fun executeAsync(runnable: () -> Unit, delay: Int) {
-  AsyncExecutor.execute(runnable, delay, false)
+  AsyncExecutor.instance.execute(runnable, delay, false)
 }
 
 /**
@@ -197,5 +208,5 @@ fun executeAsync(runnable: () -> Unit, delay: Int) {
  * @param repeat If the action should repeat
  */
 fun executeAsync(runnable: () -> Unit, delay: Int, repeat: Boolean) {
-  AsyncExecutor.execute(runnable, delay, repeat)
+  AsyncExecutor.instance.execute(runnable, delay, repeat)
 }
