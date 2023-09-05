@@ -9,6 +9,7 @@ import es.angelillo15.antiabusers.config.ConfigManager
 import es.angelillo15.antiabusers.handler.EntryHandler
 import es.angelillo15.antiabusers.inject.PlayerModule
 import es.angelillo15.antiabusers.inject.PluginModule
+import es.angelillo15.antiabusers.listener.OnInventoryNewItem
 import es.angelillo15.antiabusers.listener.OnJoinLeave
 import es.angelillo15.antiabusers.utils.PluginLogger
 import es.angelillo15.antiabusers.utils.StaticMembersInjector
@@ -78,6 +79,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
 
   override fun loadListeners() {
     registerListener(pluginInjector.getInstance(OnJoinLeave::class.java))
+    registerListener(pluginInjector.getInstance(OnInventoryNewItem::class.java))
   }
 
   private fun registerListener(listener: Listener) {
@@ -124,5 +126,12 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
 
   override fun unregisterCommands() {
     Bukkit.getServer().commandMap.getCommand("antiabusers")?.unregister(Bukkit.getServer().commandMap)
+  }
+
+  fun loadRegions() {
+    val folder = File(dataFolder, "/regions/")
+    if (!folder.exists()) {
+      folder.mkdirs()
+    }
   }
 }
