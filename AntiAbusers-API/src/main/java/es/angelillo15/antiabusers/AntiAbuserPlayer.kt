@@ -1,6 +1,7 @@
 package es.angelillo15.antiabusers
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
+import es.angelillo15.antiabusers.enum.AttackResult
 import es.angelillo15.core.utils.TextUtils
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -47,7 +48,7 @@ interface AntiAbuserPlayer {
    * @param player the player to try to attack
    * @return true if the player can attack
    */
-  fun canAttack(player: AntiAbuserPlayer): Boolean
+  fun canBeAttacked(player: AntiAbuserPlayer): AttackResult
 
   /**
    * Returns all the illegal items

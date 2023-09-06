@@ -4,8 +4,10 @@ import com.google.inject.Inject
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import com.sk89q.worldguard.protection.regions.RegionContainer
+import es.angelillo15.antiabusers.enum.AttackResult
 import es.angelillo15.antiabusers.factory.PlayerFactory
 import es.angelillo15.antiabusers.manager.RegionManager
+import es.angelillo15.antiabusers.utils.ItemUtils
 import es.angelillo15.core.Logger
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -51,10 +53,16 @@ class PaperAntiAbuserPlayer @Inject constructor(
     regionManager.getRegions().values.forEach {
       logger.debug("Checking region ${it.regionData.id}")
       it.regionData.blockedItems.forEach { item ->
-        if (player!!.inventory.containsAtLeast(item, 1)) {
-          illegalItems.computeIfAbsent(it.regionData.id) { ArrayList() }.add(item)
-          abuserRegions[it.regionData.id] = true
-          logger.debug("Player ${player!!.name} has illegal item ${item.type} in region ${it.regionData.id}")
+        player!!.inventory.contents.forEach { invItem ->
+          if (invItem == null) return@forEach
+
+          if (item.type != invItem.type) return@forEach
+
+          if (ItemUtils.isSimilar(item, invItem)) {
+            illegalItems.computeIfAbsent(it.regionData.id) { ArrayList() }.add(item)
+            abuserRegions[it.regionData.id] = true
+            logger.debug("Player ${player!!.name} has illegal item ${item.type} in region ${it.regionData.id}")
+          }
         }
       }
     }
@@ -65,8 +73,22 @@ class PaperAntiAbuserPlayer @Inject constructor(
     logger.debug("Player ${player!!.name} checked in ${end - start}ms")
   }
 
-  override fun canAttack(player: AntiAbuserPlayer): Boolean {
-    return attack
+  override fun canBeAttacked(player: AntiAbuserPlayer): AttackResult {
+    if (player.getCurrentRegions() != currentRegions) {
+      return AttackResult.DIFFERENT_REGION
+    }
+
+    if (player.isAbuser(currentRegions.first())) {
+      return AttackResult.ABUSER
+    } else {
+      currentRegions.forEach {
+        if (player.isAbuser(it)) {
+          return AttackResult.ABUSER
+        }
+      }
+    }
+
+    return AttackResult.ALLOWED
   }
 
   override fun getIllegalItems(): Map<String, ArrayList<ItemStack>> {
@@ -79,6 +101,7 @@ class PaperAntiAbuserPlayer @Inject constructor(
 
   fun reloadRegionList() {
     currentRegions.clear()
+    currentRegions.add("__global__")
 
     regionContainer.createQuery().getApplicableRegions(BukkitAdapter.adapt(player!!.location)).forEach { region ->
       currentRegions.add(region.id)
