@@ -8,12 +8,14 @@ import org.bukkit.util.io.BukkitObjectInputStream
 import org.bukkit.util.io.BukkitObjectOutputStream
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
+import java.nio.file.Files
 
 class Region @Inject constructor(val regionData: RegionData, private val antiAbusersInstance: AntiAbusersInstance) {
   private val folder = antiAbusersInstance.getPluginDataFolder().resolve("regions")
-  private val finalFile = FileOutputStream(folder.resolve("${regionData.id}.anab"))
-  private val writer = BukkitObjectOutputStream(finalFile)
+  private val finalFile = folder.resolve("${regionData.id}.anab")
+  private val tempFile = folder.resolve("${regionData.id}.anab.tmp")
 
   init {
     if (!folder.exists()) {
@@ -25,8 +27,25 @@ class Region @Inject constructor(val regionData: RegionData, private val antiAbu
    * Writes the region synchronously
    */
   fun write() {
-    antiAbusersInstance.getPluginLogger().debug("Writing binary for region ${regionData.id}")
-    writer.writeObject(regionData)
+    antiAbusersInstance.getPluginLogger().debug("Writing region ${regionData.id}")
+    val start = System.currentTimeMillis()
+    try {
+      FileOutputStream(tempFile).use {
+        BukkitObjectOutputStream(it).use { tempFileWriter ->
+          tempFileWriter.writeObject(regionData)
+          tempFileWriter.flush()
+          tempFileWriter.close()
+        }
+      }
+
+      Files.move(tempFile.toPath(), finalFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+    } catch (e: IOException) {
+      antiAbusersInstance.getPluginLogger().error("Error while writing region ${regionData.id}")
+      e.printStackTrace()
+    }
+
+    antiAbusersInstance.getPluginLogger()
+      .debug("Region ${regionData.id} written in ${System.currentTimeMillis() - start}ms")
   }
 
   /**
@@ -44,6 +63,7 @@ class Region @Inject constructor(val regionData: RegionData, private val antiAbu
       val regionManager: RegionManager = instance.getInjector().getInstance(RegionManager::class.java)
 
       if (regionManager.getRegion(regionID) != null) {
+        instance.getPluginLogger().debug("Region $regionID already loaded")
         return regionManager.getRegion(regionID)!!
       }
 
@@ -60,11 +80,19 @@ class Region @Inject constructor(val regionData: RegionData, private val antiAbu
       }
 
       val reader = BukkitObjectInputStream(fileInputStream)
-      val regionData = reader.readObject() as RegionData
-      val region = Region(regionData, instance)
+      return try {
+        instance.getPluginLogger().debug("Loading region $regionID")
+        val regionData = reader.readObject() as RegionData
+        val region = Region(regionData, instance)
 
-      regionManager.addRegion(region)
-      return region
+        regionManager.addRegion(region)
+        region
+      } catch (e: Exception) {
+        instance.getPluginLogger().error("Error while loading region $regionID")
+        val region = Region(RegionData(regionID, ArrayList()), instance)
+        region.write()
+        region
+      }
     }
   }
 }
