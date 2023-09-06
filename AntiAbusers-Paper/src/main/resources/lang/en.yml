@@ -55,7 +55,17 @@ Gui:
       material: 'PURPLE_STAINED_GLASS_PANE'
   editItems:
     title: '&aEdit items for {region}'
-    titleDeletedMenu: 'Delete item for {region}'
+    confirm:
+      name: '&aConfirm'
+      material: 'LIME_STAINED_GLASS_PANE'
+    cancel:
+      name: '&cCancel'
+      material: 'RED_STAINED_GLASS_PANE'
+    back:
+      name: '&cBack'
+      material: 'RED_STAINED_GLASS_PANE'
+  deleteItem:
+    title: '&cDelete item'
     confirm:
       name: '&aConfirm'
       material: 'LIME_STAINED_GLASS_PANE'
