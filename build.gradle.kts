@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "es.angelillo15"
-version = "1.0-SNAPSHOT"
+version = "0.1.0"
 
 dependencies {
     implementation(project(":AntiAbusers-API"))
