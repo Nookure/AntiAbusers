@@ -42,7 +42,8 @@ class OnInventoryNewItem : Listener {
 
     if (event.action != InventoryAction.PLACE_ONE &&
       event.action != InventoryAction.PLACE_SOME &&
-      event.action != InventoryAction.PLACE_ALL
+      event.action != InventoryAction.PLACE_ALL &&
+      event.action != InventoryAction.MOVE_TO_OTHER_INVENTORY
     ) {
       return
     }
