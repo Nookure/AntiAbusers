@@ -17,7 +17,7 @@ interface AntiAbuserPlayer {
    * Returns if the player is an abuser
    * @return true if the player is an abuser
    */
-  fun isAbuser(): Boolean
+  fun isAbuser(regionID: String): Boolean
 
   /**
    * Sets the abuser state of the player
@@ -40,7 +40,7 @@ interface AntiAbuserPlayer {
   /**
    * Run the abuser check
    */
-  fun check()
+  fun check(force: Boolean = false)
 
   /**
    * Returns if the player can attack
@@ -52,7 +52,7 @@ interface AntiAbuserPlayer {
   /**
    * Returns all the illegal items
    */
-  fun getIllegalItems(): ArrayList<ItemStack>
+  fun getIllegalItems(): Map<String, ArrayList<ItemStack>>
 
   /**
    * Sends a message to the player
