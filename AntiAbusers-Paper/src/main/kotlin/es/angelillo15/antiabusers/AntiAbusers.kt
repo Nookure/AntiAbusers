@@ -7,10 +7,11 @@ import es.angelillo15.antiabusers.command.AntiAbuserParent
 import es.angelillo15.antiabusers.command.CommandManager
 import es.angelillo15.antiabusers.config.ConfigManager
 import es.angelillo15.antiabusers.handler.EntryHandler
-import es.angelillo15.antiabusers.inject.PlayerModule
 import es.angelillo15.antiabusers.inject.PluginModule
 import es.angelillo15.antiabusers.listener.OnInventoryNewItem
 import es.angelillo15.antiabusers.listener.OnJoinLeave
+import es.angelillo15.antiabusers.region.Region
+import es.angelillo15.antiabusers.task.PlayerCheckTask
 import es.angelillo15.antiabusers.utils.PluginLogger
 import es.angelillo15.antiabusers.utils.StaticMembersInjector
 import es.angelillo15.core.Logger
@@ -20,6 +21,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitTask
 import java.io.File
 import java.io.InputStream
 
@@ -30,6 +32,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
   lateinit var pluginInjector: Injector
     private set
   private var debug = false
+  private var task: BukkitTask? = null
 
   companion object {
     lateinit var instance: AntiAbusers
@@ -69,7 +72,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
       return null
     }
     pPluginLogger.debug("Creating player ${player.name}")
-    return Guice.createInjector(PlayerModule(player)).getInstance(PaperAntiAbuserPlayer::class.java)
+    return getInjector().getInstance(PaperAntiAbuserPlayer::class.java).create(player)
   }
 
   override fun loadHandlers() {
@@ -95,6 +98,20 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     listeners.clear()
   }
 
+  fun loadTasks() {
+    task = Bukkit.getScheduler()
+      .runTaskTimerAsynchronously(
+        this,
+        getInjector().getInstance(PlayerCheckTask::class.java),
+        20,
+        3 * 20
+      )
+  }
+
+  fun unloadTasks() {
+    task?.cancel()
+  }
+
   override fun reload() {
     val start = System.currentTimeMillis()
     pPluginLogger.debug("Reloading plugin...")
@@ -102,12 +119,16 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     unregisterListener()
     pPluginLogger.debug("Unregistering commands...")
     unregisterCommands()
+    pPluginLogger.debug("Stoping tasks...")
+    unloadTasks()
     pPluginLogger.debug("Loading config...")
     loadConfig()
     pPluginLogger.debug("Registering commands...")
     registerCommands()
     pPluginLogger.debug("Loading listeners...")
     loadListeners()
+    pPluginLogger.debug("Loading tasks...")
+    loadTasks()
     val end = System.currentTimeMillis()
     pPluginLogger.debug("Plugin reloaded in ${end - start}ms")
   }
@@ -132,6 +153,10 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     val folder = File(dataFolder, "/regions/")
     if (!folder.exists()) {
       folder.mkdirs()
+    }
+
+    folder.listFiles()?.forEach {
+      Region.load(it.nameWithoutExtension, this)
     }
   }
 }
