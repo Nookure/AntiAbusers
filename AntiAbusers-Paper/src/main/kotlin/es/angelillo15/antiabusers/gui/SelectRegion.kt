@@ -1,6 +1,5 @@
 package es.angelillo15.antiabusers.gui
 
-import com.google.inject.Inject
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldguard.WorldGuard
 import es.angelillo15.antiabusers.utils.raw
@@ -14,15 +13,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 
-class SelectRegion @Inject constructor(val player: Player) : PaginatedGui(
+class SelectRegion (val player: Player, val logger: Logger) : PaginatedGui(
   player,
   "select-region-gui",
   TextUtils.simpleColorize(raw("Gui.selectRegionTitle")),
   6
 ) {
-  @Inject
-  private lateinit var logger: Logger
-
   override fun onOpen(event: InventoryOpenEvent) {
     addRegions(player)
     load()

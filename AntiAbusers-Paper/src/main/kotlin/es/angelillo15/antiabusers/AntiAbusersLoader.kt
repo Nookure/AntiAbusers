@@ -12,11 +12,13 @@ class AntiAbusersLoader : AntiAbusers() {
     registerCommands()
     loadRegions()
     InventoryAPI(this).init()
+    loadTasks()
   }
 
   override fun onDisable() {
     pPluginLogger.info("Disabling AntiAbusers...")
     unregisterListener()
     unregisterCommands()
+    unloadTasks()
   }
 }
