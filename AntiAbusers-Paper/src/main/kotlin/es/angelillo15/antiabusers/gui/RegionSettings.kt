@@ -38,6 +38,7 @@ class RegionSettings(val player: Player, val region: ProtectedRegion) : Gui(
     goBack.itemMeta = goBackMeta
 
     addItem(Icon(edit).onClick {
+      EditItems(player, region).open()
     }, 12)
 
     addItem(Icon(addItems).onClick {
