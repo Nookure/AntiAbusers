@@ -14,7 +14,7 @@ private const val MILES = 1000 / TPS
 class AsyncExecutor @Inject constructor(private val logger: Logger) {
   companion object {
     @JvmStatic
-    lateinit var instance: AsyncExecutor
+    var instance: AsyncExecutor? = null
       private set
   }
 
@@ -26,7 +26,7 @@ class AsyncExecutor @Inject constructor(private val logger: Logger) {
     Thread({
       while (!shuttingDown) {
         try {
-          Thread.sleep(50)
+          Thread.sleep(5)
         } catch (e: InterruptedException) {
           logger.error("Error while sleeping thread: ${e.message}")
         }
@@ -39,7 +39,7 @@ class AsyncExecutor @Inject constructor(private val logger: Logger) {
 
         for (action in actionsClone) {
           if (action.delayTask > 0) {
-            action.delayTask -= MILES
+            action.delayTask -= 5
             continue
           } else {
             action.delayTask = action.delay
@@ -181,7 +181,7 @@ class AsyncExecutor @Inject constructor(private val logger: Logger) {
  * @param runnable The runnable to execute
  */
 fun executeAsync(runnable: Runnable) {
-  AsyncExecutor.instance.execute(runnable)
+  AsyncExecutor.instance!!.execute(runnable)
 }
 
 /**
@@ -189,7 +189,7 @@ fun executeAsync(runnable: Runnable) {
  * @param runnable The runnable to execute
  */
 fun executeAsync(runnable: () -> Unit) {
-  AsyncExecutor.instance.execute(runnable)
+  AsyncExecutor.instance!!.execute(runnable)
 }
 
 /**
@@ -198,7 +198,7 @@ fun executeAsync(runnable: () -> Unit) {
  * @param delay The delay in milliseconds
  */
 fun executeAsync(runnable: () -> Unit, delay: Int) {
-  AsyncExecutor.instance.execute(runnable, delay, false)
+  AsyncExecutor.instance!!.execute(runnable, delay, false)
 }
 
 /**
@@ -208,5 +208,5 @@ fun executeAsync(runnable: () -> Unit, delay: Int) {
  * @param repeat If the action should repeat
  */
 fun executeAsync(runnable: () -> Unit, delay: Int, repeat: Boolean) {
-  AsyncExecutor.instance.execute(runnable, delay, repeat)
+  AsyncExecutor.instance!!.execute(runnable, delay, repeat)
 }
