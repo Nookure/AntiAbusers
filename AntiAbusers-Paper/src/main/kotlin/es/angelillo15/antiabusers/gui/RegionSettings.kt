@@ -1,8 +1,7 @@
 package es.angelillo15.antiabusers.gui
 
-import com.google.inject.Guice
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
-import es.angelillo15.antiabusers.inject.PlayerModule
+import es.angelillo15.antiabusers.AntiAbusers
 import es.angelillo15.antiabusers.utils.cmp
 import es.angelillo15.antiabusers.utils.raw
 import es.angelillo15.core.libs.obliviate.inventory.Gui
@@ -46,7 +45,7 @@ class RegionSettings(val player: Player, val region: ProtectedRegion) : Gui(
     }, 14)
 
     addItem(Icon(goBack).onClick {
-      Guice.createInjector(PlayerModule(player)).getInstance(SelectRegion::class.java).open()
+      SelectRegion(player, AntiAbusers.instance.pPluginLogger).open()
     }, 18)
   }
 }
