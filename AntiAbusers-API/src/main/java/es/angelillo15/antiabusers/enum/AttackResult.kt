@@ -4,4 +4,5 @@ enum class AttackResult {
   ALLOWED,
   DIFFERENT_REGION,
   ABUSER,
+  CHECKING,
 }
