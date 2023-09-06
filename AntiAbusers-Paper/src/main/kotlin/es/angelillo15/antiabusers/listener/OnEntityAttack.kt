@@ -24,7 +24,7 @@ class OnEntityAttack : Listener {
 
     val attackResult = antiAbuserAttacked.canBeAttacked(antiAbuserPlayer)
 
-    when(attackResult) {
+    when (attackResult) {
       AttackResult.DIFFERENT_REGION -> {
         event.isCancelled = true
         player.sendMessage("§cNo puedes atacar a este jugador porque no estás en la misma región")
@@ -34,6 +34,17 @@ class OnEntityAttack : Listener {
         event.isCancelled = true
         player.sendMessage("§cNo puedes atacar a este jugador porque es un abuser")
       }
+
+      AttackResult.ALLOWED -> {
+        antiAbuserPlayer.startPVPwith(antiAbuserAttacked)
+        antiAbuserAttacked.startPVPwith(antiAbuserPlayer)
+      }
+
+      AttackResult.CHECKING -> {
+        event.isCancelled = true
+        player.sendMessage("§cNo puedes atacar a este jugador porque está siendo revisado")
+      }
+
       else -> {}
     }
 
