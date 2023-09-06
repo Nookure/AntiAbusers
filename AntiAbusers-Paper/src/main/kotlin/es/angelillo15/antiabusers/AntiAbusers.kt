@@ -10,6 +10,7 @@ import es.angelillo15.antiabusers.handler.EntryHandler
 import es.angelillo15.antiabusers.inject.PluginModule
 import es.angelillo15.antiabusers.listener.OnEntityAttack
 import es.angelillo15.antiabusers.listener.OnInventoryNewItem
+import es.angelillo15.antiabusers.listener.OnItemPickup
 import es.angelillo15.antiabusers.listener.OnJoinLeave
 import es.angelillo15.antiabusers.region.Region
 import es.angelillo15.antiabusers.task.PlayerCheckTask
@@ -85,6 +86,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     registerListener(pluginInjector.getInstance(OnJoinLeave::class.java))
     registerListener(pluginInjector.getInstance(OnInventoryNewItem::class.java))
     registerListener(pluginInjector.getInstance(OnEntityAttack::class.java))
+    registerListener(pluginInjector.getInstance(OnItemPickup::class.java))
   }
 
   private fun registerListener(listener: Listener) {
