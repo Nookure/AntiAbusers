@@ -35,6 +35,8 @@ open class EntryHandler protected constructor(session: Session?) : Handler(sessi
     val abuserPlayer: AntiAbuserPlayer = manager.getPlayer(player.name)!!
 
     abuserPlayer.reloadRegionList(exited, entered)
+    abuserPlayer.check(true)
+
     AntiAbusers.instance.pPluginLogger
       .debug("Player ${player.name} has exited ${exited.size} regions and entered ${entered.size} regions")
     return true
