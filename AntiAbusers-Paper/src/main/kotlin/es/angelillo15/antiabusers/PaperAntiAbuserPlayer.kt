@@ -9,9 +9,12 @@ import es.angelillo15.antiabusers.factory.PlayerFactory
 import es.angelillo15.antiabusers.manager.RegionManager
 import es.angelillo15.antiabusers.utils.ItemUtils
 import es.angelillo15.core.Logger
+import es.angelillo15.core.libs.caffeine.cache.Caffeine
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 
 class PaperAntiAbuserPlayer @Inject constructor(
@@ -22,10 +25,16 @@ class PaperAntiAbuserPlayer @Inject constructor(
   private var player: Player? = null
   private var abuser = false
   private var checking = false
-  private var attack = false
   private var illegalItems = ConcurrentHashMap<String, ArrayList<ItemStack>>()
   private var currentRegions = ArrayList<String>()
   private var abuserRegions = ConcurrentHashMap<String, Boolean>()
+  private var pvpPlayers = Caffeine
+    .newBuilder()
+    .expireAfterWrite(Duration.ofSeconds(15))
+    .removalListener { k1: String, v1: AntiAbuserPlayer, _ ->
+      sendMessage("<red>Ya no estás en PVP con <white>${v1.getName()}")
+    }
+    .build<String, AntiAbuserPlayer>()
 
   override fun getName(): String {
     return player!!.name
@@ -49,6 +58,15 @@ class PaperAntiAbuserPlayer @Inject constructor(
     checking = force
     illegalItems.clear()
     abuserRegions.clear()
+
+    if (force && pvpPlayers.asMap().size > 0) {
+      pvpPlayers.asMap().forEach { (name, player) ->
+        player.stopPVPwith(this)
+        stopPVPwith(player)
+
+        sendMessage("<red>Ya no estás en PVP con <white>$name <red>porque has cambiado tus items")
+      }
+    }
 
     regionManager.getRegions().values.forEach {
       logger.debug("Checking region ${it.regionData.id}")
@@ -74,6 +92,12 @@ class PaperAntiAbuserPlayer @Inject constructor(
   }
 
   override fun canBeAttacked(player: AntiAbuserPlayer): AttackResult {
+    if (checking) AttackResult.CHECKING
+
+    if (isPVPing(player)) {
+      return AttackResult.ALLOWED
+    }
+
     if (player.getCurrentRegions() != currentRegions) {
       return AttackResult.DIFFERENT_REGION
     }
@@ -126,5 +150,17 @@ class PaperAntiAbuserPlayer @Inject constructor(
     this.player = player
     reloadRegionList()
     return this
+  }
+
+  override fun startPVPwith(player: AntiAbuserPlayer) {
+    pvpPlayers.put(player.getName(), player)
+  }
+
+  override fun isPVPing(player: AntiAbuserPlayer): Boolean {
+    return pvpPlayers.getIfPresent(player.getName()) != null
+  }
+
+  override fun stopPVPwith(player: AntiAbuserPlayer) {
+    pvpPlayers.invalidate(player.getName())
   }
 }

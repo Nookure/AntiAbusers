@@ -75,4 +75,26 @@ interface AntiAbuserPlayer {
    * @param entered the entered regions
    */
   fun reloadRegionList(exited: Set<ProtectedRegion>, entered: Set<ProtectedRegion>)
+
+  /**
+   * Starts the PVP with the player
+   * @param player the player to start the PVP
+   * @return true if the PVP started
+   */
+  fun startPVPwith(player: AntiAbuserPlayer)
+
+  /**
+   * Returns if the player is PVPing with another player
+   * @param player the player to check
+   * @return true if the player is PVPing with another player
+   */
+  fun isPVPing(player: AntiAbuserPlayer): Boolean
+
+  /**
+   * Stops the PVP with the player
+   *
+   * @param player the player to stop the PVP
+   * @return true if the PVP stopped
+   */
+  fun stopPVPwith(player: AntiAbuserPlayer)
 }
