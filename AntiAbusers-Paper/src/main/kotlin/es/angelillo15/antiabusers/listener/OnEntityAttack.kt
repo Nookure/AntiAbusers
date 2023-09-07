@@ -1,9 +1,11 @@
 package es.angelillo15.antiabusers.listener
 
 import com.google.inject.Inject
-import es.angelillo15.antiabusers.enum.AttackResult
+import es.angelillo15.antiabusers.enums.AttackResult
+import es.angelillo15.antiabusers.event.PlayerDamageByPlayerEvent
 import es.angelillo15.antiabusers.manager.AntiAbusersPlayers
 import es.angelillo15.antiabusers.utils.tl
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -24,6 +26,9 @@ class OnEntityAttack : Listener {
     val antiAbuserAttacked = antiAbusersPlayers.getPlayer(attacked.name) ?: return
 
     val attackResult = antiAbuserAttacked.canBeAttacked(antiAbuserPlayer)
+    val playerDamageByPlayerEvent = PlayerDamageByPlayerEvent(antiAbuserPlayer, antiAbuserAttacked, attackResult)
+    Bukkit.getPluginManager().callEvent(event)
+    if (playerDamageByPlayerEvent.isCancelled) return
 
     when (attackResult) {
       AttackResult.DIFFERENT_REGION -> {
@@ -39,6 +44,16 @@ class OnEntityAttack : Listener {
       AttackResult.ALLOWED -> {
         antiAbuserPlayer.startPVPwith(antiAbuserAttacked)
         antiAbuserAttacked.startPVPwith(antiAbuserPlayer)
+      }
+
+      AttackResult.ATTACKING_AN_ABUSER -> {
+        event.isCancelled = true
+        antiAbuserPlayer.sendMessage(tl("General.cancelAbuserAttack"))
+      }
+
+      AttackResult.ADVERT -> {
+        event.isCancelled = true
+        antiAbuserPlayer.sendMessage(tl("General.warnAndCancelOnAttack"))
       }
 
       AttackResult.CHECKING -> {
