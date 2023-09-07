@@ -8,10 +8,10 @@ import es.angelillo15.antiabusers.enum.AttackResult
 import es.angelillo15.antiabusers.factory.PlayerFactory
 import es.angelillo15.antiabusers.manager.RegionManager
 import es.angelillo15.antiabusers.utils.ItemUtils
+import es.angelillo15.antiabusers.utils.tl
 import es.angelillo15.core.Logger
 import es.angelillo15.core.libs.caffeine.cache.Caffeine
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.time.Duration
@@ -32,7 +32,7 @@ class PaperAntiAbuserPlayer @Inject constructor(
     .newBuilder()
     .expireAfterWrite(Duration.ofSeconds(15))
     .removalListener { k1: String, v1: AntiAbuserPlayer, _ ->
-      sendMessage("<red>Ya no estás en PVP con <white>${v1.getName()}")
+      sendMessage(tl("General.pvpFinished").replace("{player}", v1.getName()))
     }
     .build<String, AntiAbuserPlayer>()
 
@@ -64,7 +64,7 @@ class PaperAntiAbuserPlayer @Inject constructor(
         player.stopPVPwith(this)
         stopPVPwith(player)
 
-        sendMessage("<red>Ya no estás en PVP con <white>$name <red>porque has cambiado tus items")
+        sendMessage(tl("General.pvpCancelled").replace("{player}", name))
       }
     }
 
@@ -123,6 +123,10 @@ class PaperAntiAbuserPlayer @Inject constructor(
     player!!.sendMessage(component)
   }
 
+  override fun sendActionBar(component: Component) {
+    player!!.sendActionBar(component)
+  }
+
   fun reloadRegionList() {
     currentRegions.clear()
     currentRegions.add("__global__")
@@ -153,6 +157,10 @@ class PaperAntiAbuserPlayer @Inject constructor(
   }
 
   override fun startPVPwith(player: AntiAbuserPlayer) {
+    if (!isPVPing(player)) {
+      sendMessage(tl("General.pvpStarted").replace("{player}", player.getName()))
+    }
+
     pvpPlayers.put(player.getName(), player)
   }
 
@@ -162,5 +170,13 @@ class PaperAntiAbuserPlayer @Inject constructor(
 
   override fun stopPVPwith(player: AntiAbuserPlayer) {
     pvpPlayers.invalidate(player.getName())
+  }
+
+  override fun clearPVPs() {
+    pvpPlayers.invalidateAll()
+  }
+
+  override fun checkPVPs() {
+    pvpPlayers.estimatedSize()
   }
 }
