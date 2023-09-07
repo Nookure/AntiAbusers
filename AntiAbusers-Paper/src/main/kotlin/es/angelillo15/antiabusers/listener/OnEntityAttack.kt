@@ -25,9 +25,9 @@ class OnEntityAttack : Listener {
     val antiAbuserPlayer = antiAbusersPlayers.getPlayer(player.name) ?: return
     val antiAbuserAttacked = antiAbusersPlayers.getPlayer(attacked.name) ?: return
 
-    val attackResult = antiAbuserAttacked.canBeAttacked(antiAbuserPlayer)
+    val attackResult = antiAbuserAttacked.canBeAttacked(antiAbuserPlayer, true)
     val playerDamageByPlayerEvent = PlayerDamageByPlayerEvent(antiAbuserPlayer, antiAbuserAttacked, attackResult)
-    Bukkit.getPluginManager().callEvent(event)
+    Bukkit.getPluginManager().callEvent(playerDamageByPlayerEvent)
     if (playerDamageByPlayerEvent.isCancelled) return
 
     when (attackResult) {
