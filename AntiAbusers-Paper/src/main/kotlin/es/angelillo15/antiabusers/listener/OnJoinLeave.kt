@@ -31,6 +31,7 @@ class OnJoinLeave : Listener {
 
     logger.debug("Created player ${player.getName()}")
     manager.addPlayer(player)
+    player.check(true)
   }
 
   @EventHandler
