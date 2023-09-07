@@ -8,12 +8,10 @@ import es.angelillo15.antiabusers.command.CommandManager
 import es.angelillo15.antiabusers.config.ConfigManager
 import es.angelillo15.antiabusers.handler.EntryHandler
 import es.angelillo15.antiabusers.inject.PluginModule
-import es.angelillo15.antiabusers.listener.OnEntityAttack
-import es.angelillo15.antiabusers.listener.OnInventoryNewItem
-import es.angelillo15.antiabusers.listener.OnItemPickup
-import es.angelillo15.antiabusers.listener.OnJoinLeave
+import es.angelillo15.antiabusers.listener.*
 import es.angelillo15.antiabusers.region.Region
 import es.angelillo15.antiabusers.task.PlayerCheckTask
+import es.angelillo15.antiabusers.task.PlayerPVPCheckTask
 import es.angelillo15.antiabusers.utils.PluginLogger
 import es.angelillo15.antiabusers.utils.StaticMembersInjector
 import es.angelillo15.core.Logger
@@ -34,7 +32,8 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
   lateinit var pluginInjector: Injector
     private set
   private var debug = false
-  private var task: BukkitTask? = null
+  private var playerInvCheckTask: BukkitTask? = null
+  private var playerPVPCheckTask: BukkitTask? = null
 
   companion object {
     lateinit var instance: AntiAbusers
@@ -87,6 +86,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     registerListener(pluginInjector.getInstance(OnInventoryNewItem::class.java))
     registerListener(pluginInjector.getInstance(OnEntityAttack::class.java))
     registerListener(pluginInjector.getInstance(OnItemPickup::class.java))
+    registerListener(pluginInjector.getInstance(OnDeath::class.java))
   }
 
   private fun registerListener(listener: Listener) {
@@ -103,17 +103,26 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
   }
 
   fun loadTasks() {
-    task = Bukkit.getScheduler()
+    playerInvCheckTask = Bukkit.getScheduler()
       .runTaskTimerAsynchronously(
         this,
         getInjector().getInstance(PlayerCheckTask::class.java),
         20,
         3 * 20
       )
+
+    playerPVPCheckTask = Bukkit.getScheduler()
+      .runTaskTimerAsynchronously(
+        this,
+        getInjector().getInstance(PlayerPVPCheckTask::class.java),
+        20,
+        1 * 20
+      )
   }
 
   fun unloadTasks() {
-    task?.cancel()
+    playerInvCheckTask?.cancel()
+    playerPVPCheckTask?.cancel()
   }
 
   override fun reload() {
@@ -160,7 +169,7 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
     }
 
     folder.listFiles()?.forEach {
-      Region.load(it.nameWithoutExtension, this)
+      Region.loadFile(it.nameWithoutExtension, this)
     }
   }
 }
