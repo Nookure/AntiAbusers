@@ -38,6 +38,6 @@ allprojects {
 }
 
 tasks.shadowJar {
-    archiveFileName.set("AntiAbusers-Paper.jar")
+    archiveFileName.set("AntiAbusers-${version}.jar")
     exclude("kotlin/**")
 }
