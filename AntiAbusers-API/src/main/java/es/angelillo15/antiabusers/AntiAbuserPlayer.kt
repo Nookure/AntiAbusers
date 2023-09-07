@@ -64,10 +64,24 @@ interface AntiAbuserPlayer {
   }
 
   /**
+   * Sends an action bar to the player
+   * @param message the message to send
+   */
+  fun sendActionBar(message: String) {
+    sendActionBar(MiniMessage.miniMessage().deserialize(TextUtils.toMM(message)))
+  }
+
+  /**
    * Sends a message to the player
    * @param component the message to send
    */
   fun sendMessage(component: Component)
+
+  /**
+   * Sends an action bar to the player
+   * @param component the message to send
+   */
+  fun sendActionBar(component: Component)
 
   /**
    * Reloads the region list
@@ -97,4 +111,14 @@ interface AntiAbuserPlayer {
    * @return true if the PVP stopped
    */
   fun stopPVPwith(player: AntiAbuserPlayer)
+
+  /**
+   * fun check pvp expired
+   */
+  fun checkPVPs()
+
+  /**
+   * Clears the PVPs
+   */
+  fun clearPVPs()
 }
