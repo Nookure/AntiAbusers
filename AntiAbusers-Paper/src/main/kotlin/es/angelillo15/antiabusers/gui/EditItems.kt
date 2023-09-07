@@ -6,7 +6,6 @@ import es.angelillo15.antiabusers.region.Region
 import es.angelillo15.antiabusers.utils.cmp
 import es.angelillo15.antiabusers.utils.raw
 import es.angelillo15.core.libs.obliviate.inventory.Icon
-import es.angelillo15.core.libs.obliviate.inventory.pagination.PaginationManager
 import es.angelillo15.core.utils.TextUtils
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -16,15 +15,15 @@ import org.bukkit.inventory.ItemStack
 class EditItems(val player: Player, val region: ProtectedRegion) : PaginatedGui(
   player,
   "edit-items-gui",
-  TextUtils.simpleColorize(raw("Gui.editItems.title").replace("{region}", region.id)),
+  TextUtils.simpleColorize(raw("Gui.listItems.title").replace("{region}", region.id)),
   6
 ) {
   override fun onOpen(event: InventoryOpenEvent?) {
     load()
 
-    val back = ItemStack(Material.valueOf(raw("Gui.editItems.back.material")))
+    val back = ItemStack(Material.valueOf(raw("Gui.listItems.back.material")))
     val backMeta = back.itemMeta
-    backMeta.displayName(cmp("Gui.editItems.back.name"))
+    backMeta.displayName(cmp("Gui.listItems.back.name"))
     back.itemMeta = backMeta
 
     addItem(Icon(back).onClick {
@@ -35,7 +34,7 @@ class EditItems(val player: Player, val region: ProtectedRegion) : PaginatedGui(
   }
 
   private fun loadItems() {
-    val regionData = Region.load(region.id, AntiAbusers.instance)
+    val regionData = Region.load(region.id, player.world.name, AntiAbusers.instance)
 
     regionData.regionData.blockedItems.forEach { item ->
       paginationManager.addItem(Icon(item).onClick {

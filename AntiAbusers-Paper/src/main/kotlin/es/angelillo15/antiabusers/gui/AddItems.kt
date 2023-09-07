@@ -18,7 +18,7 @@ class AddItems(val player: Player, val region: ProtectedRegion) : Gui(
   player,
   "add-items-gui",
   TextUtils.simpleColorize(raw("Gui.addItemsToRegion.title")),
-  3
+  4
 ) {
   private val slotManager = AdvancedSlotManager(this)
   private val itemsToAdd = ArrayList<ItemStack>()
@@ -44,16 +44,16 @@ class AddItems(val player: Player, val region: ProtectedRegion) : Gui(
 
     addItem(Icon(cancel).onClick {
       RegionSettings(player, region).open()
-    }, 21)
+    }, 30)
 
     addItem(Icon(confirm).onClick {
-      val region = Region.load(region.id, AntiAbusers.instance)
+      val region = Region.load(region.id, player.world.name, AntiAbusers.instance)
       region.regionData.blockedItems.addAll(itemsToAdd)
 
       region.write()
 
       player.closeInventory()
-    }, 23)
+    }, 32)
 
     addItem(Icon(add).onClick {
       if (slot.puttedItem == null) return@onClick
@@ -63,7 +63,7 @@ class AddItems(val player: Player, val region: ProtectedRegion) : Gui(
       player.inventory.addItem(slot.puttedItem)
 
       slot = slotManager.addAdvancedIcon(13, Icon(Material.AIR))
-    }, 22)
+    }, 31)
 
     slotManager
   }

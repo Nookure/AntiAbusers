@@ -21,9 +21,9 @@ class RegionSettings(val player: Player, val region: ProtectedRegion) : Gui(
   override fun onOpen(event: InventoryOpenEvent?) {
     fillGui(Icon(Material.GRAY_STAINED_GLASS_PANE))
 
-    val edit = ItemStack(Material.valueOf(raw("Gui.settingsRegion.edit.material")))
+    val edit = ItemStack(Material.valueOf(raw("Gui.settingsRegion.listItems.material")))
     val editMeta = edit.itemMeta
-    editMeta.displayName(cmp("Gui.settingsRegion.edit.name"))
+    editMeta.displayName(cmp("Gui.settingsRegion.listItems.name"))
     edit.itemMeta = editMeta
 
     val addItems = ItemStack(Material.valueOf(raw("Gui.settingsRegion.addItems.material")))
@@ -38,11 +38,11 @@ class RegionSettings(val player: Player, val region: ProtectedRegion) : Gui(
 
     addItem(Icon(edit).onClick {
       EditItems(player, region).open()
-    }, 12)
+    }, 14)
 
     addItem(Icon(addItems).onClick {
       AddItems(player, region).open()
-    }, 14)
+    }, 12)
 
     addItem(Icon(goBack).onClick {
       SelectRegion(player, AntiAbusers.instance.pPluginLogger).open()
