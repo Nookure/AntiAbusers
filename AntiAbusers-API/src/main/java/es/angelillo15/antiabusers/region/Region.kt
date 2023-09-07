@@ -14,8 +14,8 @@ import java.nio.file.Files
 
 class Region @Inject constructor(val regionData: RegionData, private val antiAbusersInstance: AntiAbusersInstance) {
   private val folder = antiAbusersInstance.getPluginDataFolder().resolve("regions")
-  private val finalFile = folder.resolve("${regionData.id}.anab")
-  private val tempFile = folder.resolve("${regionData.id}.anab.tmp")
+  private val finalFile = folder.resolve("${regionData.world}.${regionData.id}.anab")
+  private val tempFile = folder.resolve("${regionData.world}.${regionData.id}.anab.tmp")
 
   init {
     if (!folder.exists()) {
@@ -59,7 +59,13 @@ class Region @Inject constructor(val regionData: RegionData, private val antiAbu
   }
 
   companion object {
-    fun load(regionID: String, instance: AntiAbusersInstance): Region {
+    fun loadFile(fileName: String, instance: AntiAbusersInstance) {
+      fileName.split(".").let {
+        load(it[1], it[0], instance)
+      }
+    }
+
+    fun load(regionID: String, world: String, instance: AntiAbusersInstance): Region {
       val regionManager: RegionManager = instance.getInjector().getInstance(RegionManager::class.java)
 
       if (regionManager.getRegion(regionID) != null) {
@@ -70,11 +76,11 @@ class Region @Inject constructor(val regionData: RegionData, private val antiAbu
       val fileInputStream: InputStream
       try {
         fileInputStream = FileInputStream(
-          instance.getPluginDataFolder().resolve("regions").resolve("${regionID}.anab")
+          instance.getPluginDataFolder().resolve("regions").resolve("${world}.${regionID}.anab")
         )
       } catch (e: Exception) {
         instance.getPluginLogger().debug("Region $regionID has no binary file")
-        val region = Region(RegionData(regionID, ArrayList()), instance)
+        val region = Region(RegionData(regionID, world, ArrayList()), instance)
         region.write()
         return region
       }
@@ -89,7 +95,7 @@ class Region @Inject constructor(val regionData: RegionData, private val antiAbu
         region
       } catch (e: Exception) {
         instance.getPluginLogger().error("Error while loading region $regionID")
-        val region = Region(RegionData(regionID, ArrayList()), instance)
+        val region = Region(RegionData(regionID, world, ArrayList()), instance)
         region.write()
         region
       }
