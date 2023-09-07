@@ -70,6 +70,7 @@ interface AntiAbuserPlayer {
    * @param message the message to send
    */
   fun sendMessage(message: String) {
+    if (message.isEmpty()) return
     sendMessage(MiniMessage.miniMessage().deserialize(TextUtils.toMM(message)))
   }
 
@@ -78,6 +79,7 @@ interface AntiAbuserPlayer {
    * @param message the message to send
    */
   fun sendActionBar(message: String) {
+    if (message.isEmpty()) return
     sendActionBar(MiniMessage.miniMessage().deserialize(TextUtils.toMM(message)))
   }
 
