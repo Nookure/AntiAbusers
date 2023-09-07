@@ -2,6 +2,7 @@ package es.angelillo15.antiabusers.gui
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import es.angelillo15.antiabusers.AntiAbusers
+import es.angelillo15.antiabusers.region.Region
 import es.angelillo15.antiabusers.utils.cmp
 import es.angelillo15.antiabusers.utils.raw
 import es.angelillo15.core.libs.obliviate.inventory.Gui
@@ -36,6 +37,11 @@ class RegionSettings(val player: Player, val region: ProtectedRegion) : Gui(
     goBackMeta.displayName(cmp("Gui.settingsRegion.back.name"))
     goBack.itemMeta = goBackMeta
 
+    val importFromRegions = ItemStack(Material.valueOf(raw("Gui.settingsRegion.importFromRegions.material")))
+    val importFromRegionsMeta = importFromRegions.itemMeta
+    importFromRegionsMeta.displayName(cmp("Gui.settingsRegion.importFromRegions.name"))
+    importFromRegions.itemMeta = importFromRegionsMeta
+
     addItem(Icon(edit).onClick {
       EditItems(player, region).open()
     }, 14)
@@ -47,5 +53,23 @@ class RegionSettings(val player: Player, val region: ProtectedRegion) : Gui(
     addItem(Icon(goBack).onClick {
       SelectRegion(player, AntiAbusers.instance.pPluginLogger).open()
     }, 18)
+
+    addItem(Icon(importFromRegions).onClick {
+      SelectRegion(player, AntiAbusers.instance.pPluginLogger).onClick {
+        val from = Region.load(it.id, player.world.name, AntiAbusers.instance)
+        val to = Region.load(region.id, player.world.name, AntiAbusers.instance)
+
+        from.regionData.blockedItems.forEach { item ->
+          to.regionData.blockedItems.add(item)
+        }
+
+        to.write()
+        RegionSettings(player, region).open()
+      }.onOpen {
+        it.addItem(Icon(goBack).onClick {
+          RegionSettings(player, region).open()
+        }, 45)
+      }.open()
+    }, 13)
   }
 }
