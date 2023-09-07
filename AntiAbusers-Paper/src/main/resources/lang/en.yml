@@ -42,6 +42,18 @@ General:
   # This message will be sent only if the warnOnEnter option is enabled.
   # This message will be sent to the action bar.
   abuserRegion: '&cYou are an abuser in this region.'
+  # Warn and cancel when the player tries to attack an abuser,
+  # This will prevent the player from doing the first hit
+  # and will warn him/her that he/she is attacking an abuser,
+  # and will cancel the attack if the player continues to attack
+  # the abuser after the warning message could be attacked
+  # by the abuser.
+  warnAndCancelOnAttack: '{prefix} &cYou are attacking an abuser, if you continue the abuser will be able to attack you.'
+  # Cancel attacks to an abuser
+  # This will prevent the player from attacking an abuser
+  # and will warn him/her that he/she is attacking an abuser,
+  # and will cancel the attack if the player continues to attack
+  cancelAbuserAttack: '{prefix} &cYou are attacking an abuser, you can not attack him.'
 # Gui messages section.
 Gui:
   # Back config.
