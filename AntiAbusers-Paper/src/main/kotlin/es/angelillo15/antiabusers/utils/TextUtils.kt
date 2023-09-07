@@ -14,11 +14,9 @@ fun raw(path: String): String {
 
 fun tl(path: String): String {
   return TextUtils.toMM(
-    raw(
-      path.replace(
-        "{prefix}",
-        AntiAbusers.instance.pluginInjector.getInstance(Messages::class.java).prefix()
-      )
+    raw(path).replace(
+      "{prefix}",
+      AntiAbusers.instance.pluginInjector.getInstance(Messages::class.java).prefix()
     )
   )
 }
@@ -31,8 +29,12 @@ fun string(path: String): String {
   return getConfig().getString(path) ?: path
 }
 
-fun int(path: String): Int {
+fun integer(path: String): Int {
   return getMessages().getInt(path)
+}
+
+fun long(path: String): Long {
+  return getConfig().getLong(path)
 }
 
 fun bool(path: String): Boolean {
