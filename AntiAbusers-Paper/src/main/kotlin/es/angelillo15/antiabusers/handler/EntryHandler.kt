@@ -10,6 +10,8 @@ import com.sk89q.worldguard.session.handler.Handler
 import es.angelillo15.antiabusers.AntiAbuserPlayer
 import es.angelillo15.antiabusers.AntiAbusers
 import es.angelillo15.antiabusers.manager.AntiAbusersPlayers
+import es.angelillo15.antiabusers.utils.bool
+import es.angelillo15.antiabusers.utils.tl
 
 open class EntryHandler protected constructor(session: Session?) : Handler(session) {
   class Factory : Handler.Factory<EntryHandler>() {
@@ -35,10 +37,16 @@ open class EntryHandler protected constructor(session: Session?) : Handler(sessi
     val abuserPlayer: AntiAbuserPlayer = manager.getPlayer(player.name)!!
 
     abuserPlayer.reloadRegionList(exited, entered)
-    abuserPlayer.check(true)
+    abuserPlayer.check(false)
 
     AntiAbusers.instance.pPluginLogger
       .debug("Player ${player.name} has exited ${exited.size} regions and entered ${entered.size} regions")
+
+    if (bool("Config.warnOnEnter"))
+      for (region in entered) if (abuserPlayer.isAbuser(region.id)) {
+        abuserPlayer.sendActionBar(tl("General.abuserRegion"))
+        break
+      }
     return true
   }
 
