@@ -105,7 +105,7 @@ class PaperAntiAbuserPlayer @Inject constructor(
     }
 
     if (!bool("Config.allowDifferentRegionsAttack")) {
-      if (player.getCurrentRegions() != currentRegions) {
+      if (player.getCurrentRegions().sorted() != currentRegions.sorted()) {
         return AttackResult.DIFFERENT_REGION
       }
     }
