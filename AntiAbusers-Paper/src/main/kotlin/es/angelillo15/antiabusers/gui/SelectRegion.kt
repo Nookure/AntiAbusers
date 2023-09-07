@@ -2,6 +2,7 @@ package es.angelillo15.antiabusers.gui
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldguard.WorldGuard
+import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import es.angelillo15.antiabusers.utils.raw
 import es.angelillo15.antiabusers.utils.tl
 import es.angelillo15.core.Logger
@@ -12,6 +13,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
+import java.util.function.Consumer
 
 class SelectRegion (val player: Player, val logger: Logger) : PaginatedGui(
   player,
@@ -19,6 +21,12 @@ class SelectRegion (val player: Player, val logger: Logger) : PaginatedGui(
   TextUtils.simpleColorize(raw("Gui.selectRegionTitle")),
   6
 ) {
+  private var action: Consumer<ProtectedRegion> = Consumer {
+    RegionSettings(player, it).open()
+  }
+
+  private var onOpen: Consumer<PaginatedGui> = Consumer {
+  }
   override fun onOpen(event: InventoryOpenEvent) {
     addRegions(player)
     load()
@@ -44,10 +52,22 @@ class SelectRegion (val player: Player, val logger: Logger) : PaginatedGui(
       itemStack.itemMeta = itemMeta
 
       paginationManager.addItem(Icon(itemStack).onClick {
-        RegionSettings(player, region.value).open()
+        action.accept(region.value)
       })
 
       logger.debug("Added region ${region.value.id} to the gui with material ${itemStack.type.name}")
     }
+
+    onOpen.accept(this)
+  }
+
+  fun onClick(consumer: Consumer<ProtectedRegion>) : SelectRegion {
+    this.action = consumer
+    return this
+  }
+
+  fun onOpen(consumer: Consumer<PaginatedGui>) : SelectRegion {
+    this.onOpen = consumer
+    return this
   }
 }
