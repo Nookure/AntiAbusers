@@ -3,6 +3,7 @@ package es.angelillo15.antiabusers.listener
 import com.google.inject.Inject
 import es.angelillo15.antiabusers.enum.AttackResult
 import es.angelillo15.antiabusers.manager.AntiAbusersPlayers
+import es.angelillo15.antiabusers.utils.tl
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -27,12 +28,12 @@ class OnEntityAttack : Listener {
     when (attackResult) {
       AttackResult.DIFFERENT_REGION -> {
         event.isCancelled = true
-        player.sendMessage("§cNo puedes atacar a este jugador porque no estás en la misma región")
+        antiAbuserPlayer.sendMessage(tl("General.playersAreNotInTheSameRegion").replace("{player}", attacked.name))
       }
 
       AttackResult.ABUSER -> {
         event.isCancelled = true
-        player.sendMessage("§cNo puedes atacar a este jugador porque es un abuser")
+        antiAbuserPlayer.sendMessage(tl("General.abuser"))
       }
 
       AttackResult.ALLOWED -> {
@@ -42,7 +43,7 @@ class OnEntityAttack : Listener {
 
       AttackResult.CHECKING -> {
         event.isCancelled = true
-        player.sendMessage("§cNo puedes atacar a este jugador porque está siendo revisado")
+        antiAbuserPlayer.sendMessage(tl("General.checking"))
       }
 
       else -> {}
