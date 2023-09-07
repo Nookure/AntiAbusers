@@ -6,134 +6,139 @@
 #   ▀  ▀ ▀▀ █▪ ▀▀▀ ▀▀▀ ▀  ▀ ·▀▀▀▀  ▀▀▀  ▀▀▀▀  ▀▀▀ .▀  ▀ ▀▀▀▀
 #
 # This is the messages file for AntiAbusers
-# when you can customize the plugin to your liking.
+# where you can customize the plugin to your liking.
 #
 # If you have any questions, please contact me on Discord:
-#   Discord: https://discord.nookure.com
+# https://discord.nookure.com
 #
 General:
   # Prefix of the plugin.
   # You can access to the prefix with {prefix} in the messages.
-  prefix: '<light_purple>AntiAbusers</light_purple> <gray>|</gray>'
+  prefix: "&cAntiAbusers &8|"
   # Message when you don't have permission to do an action.
-  noPermission: "&cYou don't have permission to do that."
+  noPermission: "&7You don't have permission to do that."
   # Message when you reload the plugin.
   reloaded: '{prefix} &7The plugin has been reloaded.'
   # Message when you execute edit command
   # and there isn't any region in the world.
-  noRegionsFound: '{prefix} &cNo regions found.'
+  noRegionsFound: '{prefix} &7No regions found.'
   # Message sent when two players are not in the same region, and
   # they try to start a duel.
-  playersAreNotInTheSameRegion: '{prefix} &cYou are not in the same region of {player}.'
+  playersAreNotInTheSameRegion: "{prefix} &7You're not in the same region as &c{player}&7."
   # Message sent when a player starts a duel.
-  pvpStarted: '{prefix} The duel with {player} has started.'
+  pvpStarted: '{prefix} &7The duel with &c{player} &7has started.'
   # Message sent when a player is in a duel and
   # it finishes.
-  pvpFinished: '{prefix} The duel with {player} has finished.'
+  pvpFinished: '{prefix} &7The duel with &c{player} &7has finished.'
   # You have changed your items, your pvp with {player} has been cancelled.
-  pvpCancelled: '{prefix} You have changed your items, your pvp with {player} has been cancelled.'
+  pvpCancelled: "{prefix} &7You've changed your items, your pvp with &c{player} &7has been cancelled."
   # Message sent when a player is during a force check,
   # and he tries to start a duel.
-  checking: "{prefix} You cant do that while the plugin is checking."
+  checking: "{prefix} &7You cant do that while the plugin is checking."
   # Message sent when you are detected as an abuser,
   # and you tried to start a duel.
-  abuser: "{prefix} &cYou can't do that, you are an abuser."
+  abuser: "{prefix} &cYou can't do that, you're an abuser."
   # Message sent when you enter a region where you are considered an abuser.
   # This message will be sent only if the warnOnEnter option is enabled.
   # This message will be sent to the action bar.
-  abuserRegion: '&cYou are an abuser in this region.'
+  abuserRegion: "&cYou're an abuser in this region."
   # Warn and cancel when the player tries to attack an abuser,
   # This will prevent the player from doing the first hit
   # and will warn him/her that he/she is attacking an abuser,
   # and will cancel the attack if the player continues to attack
   # the abuser after the warning message could be attacked
   # by the abuser.
-  warnAndCancelOnAttack: '{prefix} &cYou are attacking an abuser, if you continue the abuser will be able to attack you.'
+  warnAndCancelOnAttack: "&c&lWARNING! &7You're attacking an abuser, if you continue the abuser will be able to attack you."
   # Cancel attacks to an abuser
   # This will prevent the player from attacking an abuser
   # and will warn him/her that he/she is attacking an abuser,
   # and will cancel the attack if the player continues to attack
-  cancelAbuserAttack: '{prefix} &cYou are attacking an abuser, you can not attack him.'
+  cancelAbuserAttack: "{prefix} &cYou can't attack an abuser."
 # Gui messages section.
 Gui:
   # Back config.
   backItem:
     # Name of the item.
-    name: '&cPrevious page'
+    name: '&c&l‹‹ &7Previous page'
     # Material of the item.
     material: 'RED_STAINED_GLASS_PANE'
   # Forward config.
   forwardItem:
     # Name of the item.
-    name: '&aNext page'
+    name: '&7Next page &a&l››'
     # Material of the item.
     material: 'LIME_STAINED_GLASS_PANE'
   # Select region title.
-  selectRegionTitle: '&aSelect a region'
+  selectRegionTitle: '&8» Select a region'
   # Settings region title.
   settingsRegion:
     # Title of the gui.
-    title: '&aEditing {region}'
+    title: '&8» Editing {region}'
     # Edit region item.
     listItems:
       # Name of the item.
-      name: '&aList items'
+      name: '&6&l= &7List items'
       # Material of the item.
       material: 'BOOK'
     # Add items to region item.
     addItems:
       # Name of the item.
-      name: '&aAdd items'
+      name: '&2&l+ &7Add items'
       # Material of the item.
       material: 'CHEST'
+    importFromRegions:
+      # Name of the item.
+      name: '&a&l× &7Import from regions'
+      # Material of the item.
+      material: 'PAPER'
     # Back item.
     back:
       # Name of the item.
-      name: '&cBack'
+      name: '&c&l‹‹ &cBack'
       # Material of the item.
       material: 'RED_STAINED_GLASS_PANE'
   # Add items to region title.
   addItemsToRegion:
     # Title of the gui.
-    title: '&aAdd items to region'
+    title: '&8» Add items to region'
     # Confirm item.
     confirm:
       # Name of the item.
-      name: '&aConfirm'
+      name: '&a&l✓ &7Confirm'
       # Material of the item.
       material: 'LIME_STAINED_GLASS_PANE'
     # Cancel item.
     cancel:
       # Name of the item.
-      name: '&cCancel'
+      name: '&c&l× Cancel'
       # Material of the item.
       material: 'RED_STAINED_GLASS_PANE'
     # Add item.
     add:
       # Name of the item.
-      name: '<light_purple>Add</light_purple>'
+      name: '&2&l+ &7Add'
       # Material of the item.
       material: 'PURPLE_STAINED_GLASS_PANE'
   # Edit items title.
   listItems:
-    title: '&aEdit items for {region}'
+    title: '&8» Edit items for {region}'
     back:
       # Name of the item.
-      name: '&cBack'
+      name: '&c&l‹‹ &7Back'
       # Material of the item.
       material: 'RED_STAINED_GLASS_PANE'
   # Delete item title.
   deleteItem:
     # Title of the gui.
-    title: '&cDelete item'
+    title: '&c&l× &7Delete item'
     # Confirm item.
     confirm:
       # Name of the item.
-      name: '&aConfirm'
+      name: '&a&l✓ &7Confirm'
       # Material of the item.
       material: 'LIME_STAINED_GLASS_PANE'
     cancel:
       # Name of the item.
-      name: '&cCancel'
+      name: '&c&l× &7Cancel'
       # Material of the item.
       material: 'RED_STAINED_GLASS_PANE'

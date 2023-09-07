@@ -5,9 +5,136 @@
 #  ▐█ ▪▐▌██▐█▌ ▐█▌·▐█▌▐█ ▪▐▌██▄▪▐█▐█▄█▌▐█▄▪▐█▐█▄▄▌▐█•█▌▐█▄▪▐█
 #   ▀  ▀ ▀▀ █▪ ▀▀▀ ▀▀▀ ▀  ▀ ·▀▀▀▀  ▀▀▀  ▀▀▀▀  ▀▀▀ .▀  ▀ ▀▀▀▀
 #
-# Este archivo contiene los mensajes del plugin.
-# aquí puedes personalizar el plugin a tu gusto.
+# Este es el archivo de mensajes para AntiAbusers
+# donde puedes personalizar el plugin a tu gusto.
 #
-# Si tienes alguna pregunta, por favor contactame en Discord:
-#   Discord: https://discord.nookure.com
+# Si tienes alguna duda, contáctame por Discord:
+# https://discord.nookure.com
 #
+# Sección de mensajes del chat.
+General:
+  # Prefijo del plugin.
+  # Puedes acceder al prefijo con la variable {prefix} en los mensajes.
+  prefix: "&cAntiAbusers &8|"
+  # Mensaje enviado cuando no tienes permiso para hacer una acción.
+  noPermission: "&7No tienes permiso para hacer eso."
+  # Mensaje enviado cuando se recarga la configuración.
+  reloaded: '{prefix} &7El plugin ha sido recargado.'
+  # Mensahe ebvuadi cyabdi ehecytas el comando de edición
+  # y no hay ninguna región en el mundo.
+  noRegionsFound: '{prefix} &7No se han encontrado regiones.'
+  # Mensaje enviado cuando los dos jugadores no están en la misma región
+  # y intentan empezar un duelo.
+  playersAreNotInTheSameRegion: '{prefix} No estás en la misma región que &c{player}&7.'
+  # Mensaje enviado cuando un jugador inicia un duelo.
+  pvpStarted: '{prefix} &7El duelo con &c{player} &7ha empezado.'
+  # Mensaje enviado cuando termina un duelo.
+  pvpFinished: '{prefix} &7El duelo con &c{player} &7ha terminado.'
+  # Mensaje enviado cuando el jugador cambia sus objetos y está en un duelo.
+  pvpCancelled: '{prefix} &7Has cambiado tus objetos, tu duelo con &c{player} &7ha sido cancelado.'
+  # Mensaje enviado cuando el jugador intenta iniciar un duelo mientras
+  # su inventario está siendo comprobado por el plugin.
+  checking: "{prefix} &7No puedes hacer eso mientras el plugin está comprobando."
+  # Mensaje enviado cuando se detecta a un abuser y este intenta
+  # iniciar un duelo.
+  abuser: "{prefix} &cNo puedes hacer eso, eres un abuser."
+  # Mensaje enviado cuando se detecta que un jugador ha entrado a una
+  # región en la que es considerado abuser.
+  # El mensaje solo se enviará si la opción warnOnEnter está activada.
+  # Este mensaje se mostrará en la actionbar, no en el chat.
+  abuserRegion: '&cEres un abuser en esta región.'
+  # Mensaje enviado a un jugador cuando intenta atacar a un abuser.
+  # Esto evitará que el jugador haga el primer ataque y se le alertará
+  # de que está atacando un abuser. Si vuelve a golpear al abuser,
+  # comenzará un duelo y el jugador podrá ser atacado por el abuser.
+  warnAndCancelOnAttack: '&c&lWARNING! &7Estas atacando a un abuser, si sigues el abuser podrá atacarte.'
+  # Mensaje enviado a un jugador cuando intenta atacar un abuser.
+  cancelAbuserAttack: '{prefix} &cNo puedes atacar a un abuser.'
+# Sección de mensajes de inventarios.
+Gui:
+  # Objeto de página siguiente.
+  backItem:
+    # Nombre del objeto.
+    name: '&c&l‹‹ &7Página anterior'
+    # Material del objeto.
+    material: 'RED_STAINED_GLASS_PANE'
+  # Objeto de página anterior.
+  forwardItem:
+    # Nombre del objeto.
+    name: '&7Página siguiente &a&l››'
+    # Material del objeto.
+    material: 'LIME_STAINED_GLASS_PANE'
+  # Inventario de selección de región.
+  selectRegionTitle: '&8» Select a region'
+  # Inventario de ajustes.
+  settingsRegion:
+    # Título del inventario.
+    title: '&8» Editando {region}'
+    # Edit region item.
+    listItems:
+      # Nombre del objeto.
+      name: '&6&l= &7Lista de objetos'
+      # Material del objeto.
+      material: 'BOOK'
+    # Add items to region item.
+    addItems:
+      # Nombre del objeto.
+      name: '&2&l+ &7Añadir objetos'
+      # Material del objeto.
+      material: 'CHEST'
+    importFromRegions:
+      # Nombre del objeto.
+      name: '&a&l× &7Importar objetos de regiones'
+      # Material del objeto.
+      material: 'PAPER'
+    # Back item.
+    back:
+      # Nombre del objeto.
+      name: '&c&l‹‹ &cVolver'
+      # Material del objeto.
+      material: 'RED_STAINED_GLASS_PANE'
+  # Inventario de añadir objetos.
+  addItemsToRegion:
+    # Título del inventario.
+    title: '&8» Add items to region'
+    # Confirm item.
+    confirm:
+      # Nombre del objeto.
+      name: '&a&l✓ &7Confirmar'
+      # Material del objeto.
+      material: 'LIME_STAINED_GLASS_PANE'
+    # Cancel item.
+    cancel:
+      # Nombre del objeto.
+      name: '&c&l× Cancelar'
+      # Material del objeto.
+      material: 'RED_STAINED_GLASS_PANE'
+    # Add item.
+    add:
+      # Nombre del objeto.
+      name: '&2&l+ &7Añadir'
+      # Material del objeto.
+      material: 'PURPLE_STAINED_GLASS_PANE'
+  # Inventario de editar objetos.
+  listItems:
+    title: '&8» Editando items para {region}'
+    back:
+      # Nombre del objeto.
+      name: '&c&l‹‹ &7Atras'
+      # Material del objeto.
+      material: 'RED_STAINED_GLASS_PANE'
+  # Inventario de eliminar objetos.
+  deleteItem:
+    # Título del inventario.
+    title: '&c&l× &7Borrar item'
+    # Confirm item.
+    confirm:
+      # Nombre del objeto.
+      name: '&a&l✓ &7Confirmar'
+      # Material del objeto.
+      material: 'LIME_STAINED_GLASS_PANE'
+    cancel:
+      # Nombre del objeto.
+      name: '&c&l× &7Cancelar'
+      # Material del objeto.
+      material: 'RED_STAINED_GLASS_PANE'
