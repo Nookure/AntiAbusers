@@ -48,7 +48,17 @@ interface AntiAbuserPlayer {
    * @param player the player to try to attack
    * @return true if the player can attack
    */
-  fun canBeAttacked(player: AntiAbuserPlayer): AttackResult
+  fun canBeAttacked(player: AntiAbuserPlayer): AttackResult {
+    return canBeAttacked(player, false)
+  }
+
+  /**
+   * Returns if the player can attack
+   * @param player the player to try to attack
+   * @param checkHit if the player is checking the hit
+   * @return true if the player can attack
+   */
+  fun canBeAttacked(player: AntiAbuserPlayer, checkHit: Boolean): AttackResult
 
   /**
    * Returns all the illegal items

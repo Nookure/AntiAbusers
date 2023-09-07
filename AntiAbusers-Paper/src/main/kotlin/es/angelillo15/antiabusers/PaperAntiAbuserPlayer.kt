@@ -4,10 +4,12 @@ import com.google.inject.Inject
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import com.sk89q.worldguard.protection.regions.RegionContainer
-import es.angelillo15.antiabusers.enum.AttackResult
+import es.angelillo15.antiabusers.enums.AttackResult
 import es.angelillo15.antiabusers.factory.PlayerFactory
 import es.angelillo15.antiabusers.manager.RegionManager
 import es.angelillo15.antiabusers.utils.ItemUtils
+import es.angelillo15.antiabusers.utils.bool
+import es.angelillo15.antiabusers.utils.long
 import es.angelillo15.antiabusers.utils.tl
 import es.angelillo15.core.Logger
 import es.angelillo15.core.libs.caffeine.cache.Caffeine
@@ -30,10 +32,14 @@ class PaperAntiAbuserPlayer @Inject constructor(
   private var abuserRegions = ConcurrentHashMap<String, Boolean>()
   private var pvpPlayers = Caffeine
     .newBuilder()
-    .expireAfterWrite(Duration.ofSeconds(15))
+    .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
     .removalListener { k1: String, v1: AntiAbuserPlayer, _ ->
       sendMessage(tl("General.pvpFinished").replace("{player}", v1.getName()))
     }
+    .build<String, AntiAbuserPlayer>()
+  private var abusersAttacked = Caffeine
+    .newBuilder()
+    .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
     .build<String, AntiAbuserPlayer>()
 
   override fun getName(): String {
@@ -91,15 +97,35 @@ class PaperAntiAbuserPlayer @Inject constructor(
     logger.debug("Player ${player!!.name} checked in ${end - start}ms")
   }
 
-  override fun canBeAttacked(player: AntiAbuserPlayer): AttackResult {
+  override fun canBeAttacked(player: AntiAbuserPlayer, checkHit: Boolean): AttackResult {
     if (checking) AttackResult.CHECKING
 
     if (isPVPing(player)) {
       return AttackResult.ALLOWED
     }
 
-    if (player.getCurrentRegions() != currentRegions) {
-      return AttackResult.DIFFERENT_REGION
+    if (!bool("Config.allowDifferentRegionsAttack")) {
+      if (player.getCurrentRegions() != currentRegions) {
+        return AttackResult.DIFFERENT_REGION
+      }
+    }
+    if (checkHit) {
+      if (bool("Config.cancelAbuserAttack")) {
+        if (player.canBeAttacked(this) == AttackResult.ABUSER) {
+          return AttackResult.ATTACKING_AN_ABUSER
+        }
+      }
+
+      if (bool("Config.warnAndCancelOnAttack")) {
+        if (player.canBeAttacked(this) == AttackResult.ABUSER) {
+          return if (!abusersAttacked.asMap().containsKey(player.getName())) {
+            abusersAttacked.put(player.getName(), player)
+            AttackResult.ADVERT
+          } else {
+            AttackResult.ALLOWED
+          }
+        }
+      }
     }
 
     if (player.isAbuser(currentRegions.first())) {
@@ -162,6 +188,7 @@ class PaperAntiAbuserPlayer @Inject constructor(
     }
 
     pvpPlayers.put(player.getName(), player)
+    abusersAttacked.put(player.getName(), player)
   }
 
   override fun isPVPing(player: AntiAbuserPlayer): Boolean {
