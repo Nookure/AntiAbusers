@@ -21,3 +21,25 @@ Config:
   # When enabled, the plugin will print debug messages to the console
   # This is useful for debugging the plugin and finding errors
   debug: false
+  # Delay in seconds to check the player's inventory
+  playerAsyncInventoryCheckDelay: 5
+  # Allow players to attack other players when they are in different regions
+  allowDifferentRegionsAttack: false
+  # How many seconds to wait before the player who attacked an abuser
+  # would be protected from the abuser again
+  pvpTimer: 10
+  # Warn the player when he/she enters a region where he/she
+  # is considered an abuser
+  warnOnEnter: true
+  # Warn and cancel when the player tries to attack an abuser,
+  # This will prevent the player from doing the first hit
+  # and will warn him/her that he/she is attacking an abuser,
+  # and will cancel the attack if the player continues to attack
+  # the abuser after the warning message could be attacked
+  # by the abuser.
+  warnAndCancelOnAttack: true
+  # Cancel attacks to an abuser
+  # This will prevent the player from attacking an abuser
+  # and will warn him/her that he/she is attacking an abuser,
+  # and will cancel the attack if the player continues to attack
+  cancelAbuserAttack: false

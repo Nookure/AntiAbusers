@@ -24,30 +24,36 @@ General:
   noRegionsFound: '{prefix} &cNo regions found.'
   # Message sent when two players are not in the same region, and
   # they try to start a duel.
-  playersAreNotInTheSameRegion: '{prefix} &cPlayers are not in the same region.'
+  playersAreNotInTheSameRegion: '{prefix} &cYou are not in the same region of {player}.'
   # Message sent when a player starts a duel.
   pvpStarted: '{prefix} The duel with {player} has started.'
   # Message sent when a player is in a duel and
   # it finishes.
   pvpFinished: '{prefix} The duel with {player} has finished.'
+  # You have changed your items, your pvp with {player} has been cancelled.
+  pvpCancelled: '{prefix} You have changed your items, your pvp with {player} has been cancelled.'
   # Message sent when a player is during a force check,
   # and he tries to start a duel.
   checking: "{prefix} You cant do that while the plugin is checking."
   # Message sent when you are detected as an abuser,
   # and you tried to start a duel.
   abuser: "{prefix} &cYou can't do that, you are an abuser."
+  # Message sent when you enter a region where you are considered an abuser.
+  # This message will be sent only if the warnOnEnter option is enabled.
+  # This message will be sent to the action bar.
+  abuserRegion: '&cYou are an abuser in this region.'
 # Gui messages section.
 Gui:
   # Back config.
   backItem:
     # Name of the item.
-    name: '&cBack'
+    name: '&cPrevious page'
     # Material of the item.
     material: 'RED_STAINED_GLASS_PANE'
   # Forward config.
   forwardItem:
     # Name of the item.
-    name: '&aForward'
+    name: '&aNext page'
     # Material of the item.
     material: 'LIME_STAINED_GLASS_PANE'
   # Select region title.
@@ -57,9 +63,9 @@ Gui:
     # Title of the gui.
     title: '&aEditing {region}'
     # Edit region item.
-    edit:
+    listItems:
       # Name of the item.
-      name: '&aEdit'
+      name: '&aList items'
       # Material of the item.
       material: 'BOOK'
     # Add items to region item.
@@ -97,18 +103,8 @@ Gui:
       # Material of the item.
       material: 'PURPLE_STAINED_GLASS_PANE'
   # Edit items title.
-  editItems:
+  listItems:
     title: '&aEdit items for {region}'
-    confirm:
-      # Name of the item.
-      name: '&aConfirm'
-      # Material of the item.
-      material: 'LIME_STAINED_GLASS_PANE'
-    cancel:
-      # Name of the item.
-      name: '&cCancel'
-      # Material of the item.
-      material: 'RED_STAINED_GLASS_PANE'
     back:
       # Name of the item.
       name: '&cBack'
