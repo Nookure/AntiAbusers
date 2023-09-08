@@ -1,5 +1,6 @@
 package es.angelillo15.antiabusers.command
 
+import es.angelillo15.antiabusers.AntiAbusers
 import es.angelillo15.core.cmd.Command
 import es.angelillo15.core.cmd.sender.BukkitConsoleCommandSender
 import es.angelillo15.core.cmd.sender.PlayerCommandSender
@@ -25,11 +26,10 @@ class CommandTemplate : org.bukkit.command.Command {
   }
 
   override fun execute(sender: CommandSender, commandLabel: String, args: Array<String>): Boolean {
-
     val commandSender = if (sender is Player) {
       PlayerCommandSender(sender)
     } else {
-      BukkitConsoleCommandSender()
+      AntiAbusers.instance.getInjector().getInstance(BukkitConsoleCommandSender::class.java)
     }
 
     command.onCommand(commandSender, commandLabel, args);
