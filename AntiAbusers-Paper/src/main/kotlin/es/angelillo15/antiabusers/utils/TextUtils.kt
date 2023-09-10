@@ -41,6 +41,10 @@ fun bool(path: String): Boolean {
   return getConfig().getBoolean(path)
 }
 
+fun stringList(path: String): List<String> {
+  return getConfig().getStringList(path)
+}
+
 private fun getMessages(): YamlFile {
   return AntiAbusers.instance.pluginInjector.getInstance(ConfigManager::class.java).messages!!.config
 }

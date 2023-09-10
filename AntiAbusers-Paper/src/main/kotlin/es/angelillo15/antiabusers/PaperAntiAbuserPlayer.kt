@@ -7,10 +7,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer
 import es.angelillo15.antiabusers.enums.AttackResult
 import es.angelillo15.antiabusers.factory.PlayerFactory
 import es.angelillo15.antiabusers.manager.RegionManager
-import es.angelillo15.antiabusers.utils.ItemUtils
-import es.angelillo15.antiabusers.utils.bool
-import es.angelillo15.antiabusers.utils.long
-import es.angelillo15.antiabusers.utils.tl
+import es.angelillo15.antiabusers.utils.*
 import es.angelillo15.core.Logger
 import es.angelillo15.core.libs.caffeine.cache.Caffeine
 import net.kyori.adventure.text.Component
@@ -20,9 +17,9 @@ import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 
 class PaperAntiAbuserPlayer @Inject constructor(
-  private val regionContainer: RegionContainer,
-  private val regionManager: RegionManager,
-  private val logger: Logger
+        private val regionContainer: RegionContainer,
+        private val regionManager: RegionManager,
+        private val logger: Logger
 ) : AntiAbuserPlayer, PlayerFactory<PaperAntiAbuserPlayer> {
   private var player: Player? = null
   private var abuser = false
@@ -31,16 +28,16 @@ class PaperAntiAbuserPlayer @Inject constructor(
   private var currentRegions = ArrayList<String>()
   private var abuserRegions = ConcurrentHashMap<String, Boolean>()
   private var pvpPlayers = Caffeine
-    .newBuilder()
-    .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
-    .removalListener { k1: String, v1: AntiAbuserPlayer, _ ->
-      sendMessage(tl("General.pvpFinished").replace("{player}", v1.getName()))
-    }
-    .build<String, AntiAbuserPlayer>()
+          .newBuilder()
+          .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
+          .removalListener { k1: String, v1: AntiAbuserPlayer, _ ->
+            sendMessage(tl("General.pvpFinished").replace("{player}", v1.getName()))
+          }
+          .build<String, AntiAbuserPlayer>()
   private var abusersAttacked = Caffeine
-    .newBuilder()
-    .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
-    .build<String, AntiAbuserPlayer>()
+          .newBuilder()
+          .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
+          .build<String, AntiAbuserPlayer>()
 
   override fun getName(): String {
     return player!!.name
@@ -160,6 +157,8 @@ class PaperAntiAbuserPlayer @Inject constructor(
     regionContainer.createQuery().getApplicableRegions(BukkitAdapter.adapt(player!!.location)).forEach { region ->
       currentRegions.add(region.id)
     }
+    if (bool("Config.ignoreRegions"))
+      currentRegions.removeAll(stringList("Config.ignoreRegionsList").toSet())
   }
 
   override fun reloadRegionList(exited: Set<ProtectedRegion>, entered: Set<ProtectedRegion>) {
@@ -170,6 +169,8 @@ class PaperAntiAbuserPlayer @Inject constructor(
     entered.forEach { region ->
       currentRegions.add(region.id)
     }
+    if (bool("Config.ignoreRegions"))
+      currentRegions.removeAll(stringList("Config.ignoreRegionsList").toSet())
   }
 
   override fun isAbuser(regionID: String): Boolean {
