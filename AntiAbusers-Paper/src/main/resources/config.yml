@@ -43,3 +43,12 @@ Config:
   # and will warn him/her that he/she is attacking an abuser,
   # and will cancel the attack if the player continues to attack
   cancelAbuserAttack: false
+  # If you enable this option, the plugin will ignore the regions
+  # that are in the ignoreRegionsList, this is useful if you
+  # have a parent region that contains other regions, and you
+  # want to ignore the child regions.
+  ignoreRegions: false
+  # List of regions to ignore
+  ignoreRegionsList:
+    - region1
+    - region2

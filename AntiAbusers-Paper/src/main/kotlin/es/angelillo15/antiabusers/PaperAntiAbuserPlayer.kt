@@ -7,22 +7,17 @@ import com.sk89q.worldguard.protection.regions.RegionContainer
 import es.angelillo15.antiabusers.enums.AttackResult
 import es.angelillo15.antiabusers.factory.PlayerFactory
 import es.angelillo15.antiabusers.manager.RegionManager
-import es.angelillo15.antiabusers.utils.ItemUtils
-import es.angelillo15.antiabusers.utils.bool
-import es.angelillo15.antiabusers.utils.long
-import es.angelillo15.antiabusers.utils.tl
+import es.angelillo15.antiabusers.utils.*
 import es.angelillo15.core.Logger
-import es.angelillo15.core.libs.caffeine.cache.Caffeine
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 
 class PaperAntiAbuserPlayer @Inject constructor(
-  private val regionContainer: RegionContainer,
-  private val regionManager: RegionManager,
-  private val logger: Logger
+        private val regionContainer: RegionContainer,
+        private val regionManager: RegionManager,
+        private val logger: Logger
 ) : AntiAbuserPlayer, PlayerFactory<PaperAntiAbuserPlayer> {
   private var player: Player? = null
   private var abuser = false
@@ -30,17 +25,8 @@ class PaperAntiAbuserPlayer @Inject constructor(
   private var illegalItems = ConcurrentHashMap<String, ArrayList<ItemStack>>()
   private var currentRegions = ArrayList<String>()
   private var abuserRegions = ConcurrentHashMap<String, Boolean>()
-  private var pvpPlayers = Caffeine
-    .newBuilder()
-    .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
-    .removalListener { k1: String, v1: AntiAbuserPlayer, _ ->
-      sendMessage(tl("General.pvpFinished").replace("{player}", v1.getName()))
-    }
-    .build<String, AntiAbuserPlayer>()
-  private var abusersAttacked = Caffeine
-    .newBuilder()
-    .expireAfterWrite(Duration.ofSeconds(long("Config.pvpTimer")))
-    .build<String, AntiAbuserPlayer>()
+  private var pvpPlayers = ConcurrentHashMap<String, PlayerPvPContainer>()
+  private var abusersAttacked = ConcurrentHashMap<String, PlayerPvPContainer>()
 
   override fun getName(): String {
     return player!!.name
@@ -65,10 +51,10 @@ class PaperAntiAbuserPlayer @Inject constructor(
     illegalItems.clear()
     abuserRegions.clear()
 
-    if (force && pvpPlayers.asMap().size > 0) {
-      pvpPlayers.asMap().forEach { (name, player) ->
-        player.stopPVPwith(this)
-        stopPVPwith(player)
+    if (force && pvpPlayers.size > 0) {
+      pvpPlayers.forEach { (name, player) ->
+        player.player.stopPVPwith(this)
+        stopPVPwith(player.player)
 
         sendMessage(tl("General.pvpCancelled").replace("{player}", name))
       }
@@ -118,8 +104,10 @@ class PaperAntiAbuserPlayer @Inject constructor(
 
       if (bool("Config.warnAndCancelOnAttack")) {
         if (player.canBeAttacked(this) == AttackResult.ABUSER) {
-          return if (!abusersAttacked.asMap().containsKey(player.getName())) {
-            abusersAttacked.put(player.getName(), player)
+          return if (!abusersAttacked.containsKey(player.getName())) {
+            abusersAttacked.put(player.getName(),
+              PlayerPvPContainer(getPVPTime(), player)
+            )
             AttackResult.ADVERT
           } else {
             AttackResult.ALLOWED
@@ -160,6 +148,8 @@ class PaperAntiAbuserPlayer @Inject constructor(
     regionContainer.createQuery().getApplicableRegions(BukkitAdapter.adapt(player!!.location)).forEach { region ->
       currentRegions.add(region.id)
     }
+    if (bool("Config.ignoreRegions"))
+      currentRegions.removeAll(stringList("Config.ignoreRegionsList").toSet())
   }
 
   override fun reloadRegionList(exited: Set<ProtectedRegion>, entered: Set<ProtectedRegion>) {
@@ -170,6 +160,8 @@ class PaperAntiAbuserPlayer @Inject constructor(
     entered.forEach { region ->
       currentRegions.add(region.id)
     }
+    if (bool("Config.ignoreRegions"))
+      currentRegions.removeAll(stringList("Config.ignoreRegionsList").toSet())
   }
 
   override fun isAbuser(regionID: String): Boolean {
@@ -183,27 +175,50 @@ class PaperAntiAbuserPlayer @Inject constructor(
   }
 
   override fun startPVPwith(player: AntiAbuserPlayer) {
+    logger.debug("Starting PVP with ${player.getName()}")
     if (!isPVPing(player)) {
+      logger.debug("Player ${player.getName()} wasn't PVPing")
       sendMessage(tl("General.pvpStarted").replace("{player}", player.getName()))
     }
 
-    pvpPlayers.put(player.getName(), player)
-    abusersAttacked.put(player.getName(), player)
+    pvpPlayers[player.getName()] =
+      PlayerPvPContainer(getPVPTime(), player)
+    abusersAttacked[player.getName()] =
+      PlayerPvPContainer(getPVPTime(), player)
   }
 
   override fun isPVPing(player: AntiAbuserPlayer): Boolean {
-    return pvpPlayers.getIfPresent(player.getName()) != null
+    return pvpPlayers.containsKey(player.getName())
   }
 
   override fun stopPVPwith(player: AntiAbuserPlayer) {
-    pvpPlayers.invalidate(player.getName())
+    pvpPlayers.remove(player.getName())
   }
 
   override fun clearPVPs() {
-    pvpPlayers.invalidateAll()
+    pvpPlayers.clear()
   }
 
   override fun checkPVPs() {
-    pvpPlayers.estimatedSize()
+    pvpPlayers.forEach { (_, container) ->
+      if (container.time < System.currentTimeMillis()) {
+        logger.debug("Start time ${container.time} < ${System.currentTimeMillis()}")
+        container.player.stopPVPwith(this)
+        stopPVPwith(container.player)
+
+        sendMessage(tl("General.pvpFinished").replace("{player}", container.player.getName()))
+        container.player.sendMessage(tl("General.pvpFinished").replace("{player}", getName()))
+      }
+    }
+
+    abusersAttacked.forEach { (name, container) ->
+      if (container.time < System.currentTimeMillis()) {
+        abusersAttacked.remove(name)
+      }
+    }
+  }
+
+  private fun getPVPTime(): Long {
+    return System.currentTimeMillis() + (long("Config.pvpTimer") * 1000)
   }
 }

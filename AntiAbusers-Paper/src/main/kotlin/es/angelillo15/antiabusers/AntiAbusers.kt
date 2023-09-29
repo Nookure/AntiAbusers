@@ -24,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
 import java.io.File
 import java.io.InputStream
+import java.util.stream.Stream
 
 open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
   private val listeners = ArrayList<Listener>()
@@ -82,11 +83,15 @@ open class AntiAbusers : JavaPlugin(), AntiAbusersInstance {
   }
 
   override fun loadListeners() {
-    registerListener(pluginInjector.getInstance(OnJoinLeave::class.java))
-    registerListener(pluginInjector.getInstance(OnInventoryNewItem::class.java))
-    registerListener(pluginInjector.getInstance(OnEntityAttack::class.java))
-    registerListener(pluginInjector.getInstance(OnItemPickup::class.java))
-    registerListener(pluginInjector.getInstance(OnDeath::class.java))
+    Stream.of(
+      OnJoinLeave::class.java,
+      OnInventoryNewItem::class.java,
+      OnEntityAttack::class.java,
+      OnItemPickup::class.java,
+      OnDeath::class.java
+    ).forEach {
+      registerListener(pluginInjector.getInstance(it))
+    }
   }
 
   private fun registerListener(listener: Listener) {
